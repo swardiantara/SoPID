@@ -124,7 +124,8 @@ def merge_log_datasets(input_dir, output_file, label_column=['Source', 'EventId'
 # else:
 #     df = pd.read_csv('merged_logs.csv')
 input_feature = 'sentence'
-df = pd.read_excel('dataset_sentence_labeled.xlsx').drop_duplicates(subset=[input_feature])
+df = pd.read_excel('dataset_sentence_labeled.xlsx').sort_values(by='label', ascending=False).drop_duplicates(subset=input_feature, keep='first')
+# df = pd.read_excel('dataset_sentence_labeled.xlsx').drop_duplicates(subset=[input_feature])
 # Create pairs for contrastive learning
 # Eq. (1) and Eq. (2)
 def create_pairs(df, input_col, label_column):

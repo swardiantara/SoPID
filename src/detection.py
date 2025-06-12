@@ -3,7 +3,6 @@ from torch import nn
 from typing import List, Dict, Any
 from src.data_loader import LogRecord
 
-from src.config import AnalysisConfig
     
 class AnomalyDetector(nn.Module):
     def __init__(self, embedding_model, tokenizer, hidden_dim=128, dropout_rate=0.1, num_class=2, freeze_embedding=False):

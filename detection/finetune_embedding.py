@@ -123,7 +123,8 @@ def merge_log_datasets(input_dir, output_file, label_column=['Source', 'EventId'
 #     df = merge_log_datasets(input_directory, output_path)
 # else:
 #     df = pd.read_csv('merged_logs.csv')
-df = pd.read_excel('dataset_sentence_labeled.xlsx')
+input_feature = 'sentence'
+df = pd.read_excel('dataset_sentence_labeled.xlsx').drop_duplicates(subset=[input_feature])
 # Create pairs for contrastive learning
 # Eq. (1) and Eq. (2)
 def create_pairs(df, input_col, label_column):
@@ -140,7 +141,6 @@ def create_pairs(df, input_col, label_column):
     return examples
 # scenario = 'Merged_1'
 # if not os.path.exists(f'sample_pairs_{scenario}.joblib'):
-input_feature = 'sentence'
 examples = create_pairs(df, input_feature, 'label')
 #     joblib.dump(examples, f'sample_pairs_{scenario}.joblib')
 # else:

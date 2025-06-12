@@ -9,8 +9,8 @@ import torch
 from transformers import AutoModel, AutoTokenizer
 from torch.utils.data import DataLoader
 
-from src.utils import AnomalyDataset
-from src.detection import AnomalyDetector
+from utils import AnomalyDataset
+from detection import AnomalyDetector
 
 idx2label = {
     0: 'normal',
@@ -46,7 +46,7 @@ def main():
     args = parser.parse_args()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    dataset = pd.read_excel('dataset_sentence_labeled.xlsx')
+    dataset = pd.read_excel('dataset_sentence_labeled.xlsx').sort_values(by='label', ascending=False).drop_duplicates(subset=args.feature_col, keep='first')
     dataset["label"] = dataset['label'].map(label2idx)
     # dataset["multiclass_label"] = dataset['label'].map(label2idx)
 

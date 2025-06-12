@@ -12,25 +12,13 @@ from torch.utils.data import DataLoader
 from src.utils import AnomalyDataset
 from src.detection import AnomalyDetector
 
-raw2label = {
-        1: 'normal',
-        2: 'low',
-        3: 'medium',
-        4: 'high'
-    }
-
-label2idx = {
-    'normal': 0,
-    'low': 1,
-    'medium': 2,
-    'high': 3
-}
-
 idx2label = {
     0: 'normal',
-    1: 'low',
-    2: 'medium',
-    3: 'high'
+    1: 'problem'
+}
+label2idx = {
+    'normal': 0,
+    'problem': 1
 }
 
 parser = argparse.ArgumentParser(description="Drone Log Analyzer")
@@ -59,7 +47,7 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     dataset = pd.read_excel('dataset_sentence_labeled.xlsx')
-    # dataset["label"] = dataset['label'].map(raw2label)
+    dataset["label"] = dataset['label'].map(label2idx)
     # dataset["multiclass_label"] = dataset['label'].map(label2idx)
 
     model_name_path = f"swardiantara/{args.feature_col}-problem-embedding"

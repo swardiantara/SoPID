@@ -2,7 +2,7 @@ import os
 import glob
 import random
 import joblib
-
+import argparse
 from collections import defaultdict
 
 import pandas as pd
@@ -11,6 +11,11 @@ from torch.utils.data import DataLoader, Dataset
 from sentence_transformers import SentenceTransformer, InputExample, losses, models, evaluation
 from sentence_transformers.readers import InputExample
 from sentence_transformers.evaluation import EmbeddingSimilarityEvaluator
+
+parser = argparse.ArgumentParser(description="Drone Log Analyzer")
+    
+# Required arguments
+parser.add_argument("--feature_col", required=True, default="sentence", help="Level of analysis")
 
 # Check if GPU is available
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -123,7 +128,8 @@ def merge_log_datasets(input_dir, output_file, label_column=['Source', 'EventId'
 #     df = merge_log_datasets(input_directory, output_path)
 # else:
 #     df = pd.read_csv('merged_logs.csv')
-input_feature = 'sentence'
+args = parser.parse_args()
+input_feature = args.feature_col
 df = pd.read_excel('dataset_sentence_labeled.xlsx').sort_values(by='label', ascending=False).drop_duplicates(subset=input_feature, keep='first')
 # df = pd.read_excel('dataset_sentence_labeled.xlsx').drop_duplicates(subset=[input_feature])
 # Create pairs for contrastive learning

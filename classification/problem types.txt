@@ -1,0 +1,21 @@
+Violation of regulation: entering non-fly zone, exceeding maximum altitude
+Surrounding environment: high wind velocity, magnetic interference, ambient light too weak
+Communication issue: transmission signal, RC signal
+Hardware fault: overheating, battery over/undercurrent, battery temperature, battery instalation, motor instalation, camera, storage, gimbal, compass, 
+Configuration Issue: pre-configured parameter (max flight distance, max altitude, minimum altitude, max gimbal pitch) violation
+Software Issue: GPS Signal, Cannot switch flight mode, feature not working, fail command, 
+
+
+Focus metrics: efficiency dan trustworthiness, admissibility
+admissible assistive technology
+
+untuk syntactic-based anomaly detection:
+bisa pakai keyword-based sentiment analysis -> mending pakai ini, karena ada referensi.
+kalau bisa, di domain log. -> OS Log keyword (Studiawan, 2020) Access
+
+Print statement preferensi sangat subjektif.
+ada di paper log parsing -> diskusi tentang log statement
+
+NIST-comply Dataset and Tools
+https://www.nist.gov/itl/ssd/digital-forensics
++ forensic-readiness

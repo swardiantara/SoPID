@@ -4,6 +4,7 @@ import torch
 import argparse
 import pandas as pd
 
+from huggingface_hub import HfApi
 from torch.utils.data import DataLoader, Dataset
 from sentence_transformers import SentenceTransformer, InputExample, losses, models, evaluation
 from sentence_transformers.readers import InputExample
@@ -19,13 +20,12 @@ parser.add_argument("--label_col", required=True, default="problem_type", help="
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 print(f'Training using device: {device}')
 
+args = parser.parse_args()
 # Step 1: Load a pre-trained model
-model_name = 'all-MiniLM-L6-v2'  # or 'hkunlp/instructor-xl'
+model_name = 'all-MiniLM-L6-v2'
 model = SentenceTransformer(model_name).to(device)
 
-# Load your dataset
-df = pd.read_excel('dataset_problem_type.xlsx')
-args = parser.parse_args()
+df = pd.read_excel(os.path.join('dataset', f'train_{args.feature_col}.xlsx'))
 # Create pairs for contrastive learning
 def create_pairs(df, input_col, label_column):
     examples = []
@@ -39,23 +39,10 @@ def create_pairs(df, input_col, label_column):
             for j, other_row in other_df.iterrows():
                 examples.append(InputExample(texts=[row[input_col], other_row[input_col]], label=0.0))
     return examples
-# def create_pairs(df):
-#     examples = []
-#     for label in df['cluster_id'].unique():
-#         cluster_df = df[df['cluster_id'] == label]
-#         other_df = df[df['cluster_id'] != label]
-#         for i, row in cluster_df.iterrows():
-#             for j, other_row in cluster_df.iterrows():
-#                 if i != j:
-#                     examples.append(InputExample(texts=[row['message'], other_row['message']], label=1.0))
-#             for j, other_row in other_df.iterrows():
-#                 examples.append(InputExample(texts=[row['message'], other_row['message']], label=0.0))
-#     return examples
 
 examples = create_pairs(df, args.feature_col, args.label_col)
 # Step 3: Create DataLoader
 train_dataloader = DataLoader(examples, shuffle=True, batch_size=64)
-# print(train_dataloader)
 
 # Step 4: Define the contrastive loss
 train_loss = losses.ContrastiveLoss(model=model)
@@ -79,3 +66,10 @@ model.fit(
 
 # Save the model
 model.save(output_path, 'drone-problem-type')
+# Push the model
+api = HfApi(token=os.getenv("HF_TOKEN"))
+api.upload_folder(
+    folder_path=output_path,
+    repo_id=f"swardiantara/{args.feature_col}-{args.label_col}-embedding",
+    repo_type="model",
+)

@@ -25,7 +25,7 @@ args = parser.parse_args()
 model_name = 'all-MiniLM-L6-v2'
 model = SentenceTransformer(model_name).to(device)
 
-df = pd.read_excel(os.path.join('dataset', f'train_{args.feature_col}.xlsx'))
+df = pd.read_excel(os.path.join('dataset', f'train_sentence.xlsx'))
 # Create pairs for contrastive learning
 def create_pairs(df, input_col, label_column):
     examples = []
@@ -51,7 +51,7 @@ train_loss = losses.ContrastiveLoss(model=model)
 evaluator = EmbeddingSimilarityEvaluator.from_input_examples(examples)
 
 # Step 5: Train the model
-num_epochs = 1
+num_epochs = 3
 warmup_steps = int(len(train_dataloader) * num_epochs * 0.1)
 output_path = os.path.join('embeddings', f'{args.feature_col}-{args.label_col}')
 os.makedirs(output_path, exist_ok=True)

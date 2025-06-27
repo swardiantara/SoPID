@@ -260,7 +260,7 @@ def main():
         json.dump(arguments_dict, json_file, indent=4)
     
     # generate a confusion matrix visualization to ease analysis
-    class_names = [key for key, _ in raw2pro.items()]
+    class_names = [value for _, value in raw2pro.items()]
     conf_matrix = confusion_matrix(prediction_df['label'].to_list(), prediction_df['pred'].to_list(), labels=class_names)
     plt.figure(figsize=(4, 3.5))
     sns.heatmap(conf_matrix, annot=True, xticklabels=class_names, yticklabels=class_names, fmt='d', cmap='YlGnBu', cbar=False, square=False)

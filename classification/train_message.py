@@ -24,12 +24,12 @@ parser = argparse.ArgumentParser(description="Problem type classification")
 
 raw2pro = {
     'normal': 'Normal',
-    'HwFlt': 'HardwareFault',
-    'Swflt': 'SoftwareFault',
     'SurEnv': 'SurroundingEnvironment',
+    'HwFlt': 'HardwareFault',
     'ConfIss': 'ParamViolation',
+    'VioReg': 'RegulationViolation',
     'CommIss': "CommunicationIssue",
-    'VioReg': 'RegulationViolation'
+    'Swflt': 'SoftwareFault'
 }
 
 def get_args():
@@ -81,14 +81,12 @@ def main():
     label_encoder = MultiLabelBinarizer()
 
     train_df = pd.read_excel(os.path.join('dataset', f'train_{args.feature_col}.xlsx'))
+    LABEL_COLUMNS = train_df.columns.tolist()[2:]
     train_df["labels"] = train_df['labels'].apply(literal_eval)
     train_df['labels'] = train_df['labels'].apply(lambda x: [raw2pro.get(item, item) for item in x])
-    train_df["labelidx"] = label_encoder.fit_transform(train_df['labels'].to_list()).astype(list)
-    print(train_df.head(5))
     test_df = pd.read_excel(os.path.join('dataset', f'test_{args.feature_col}.xlsx'))
     test_df["labels"] = test_df['labels'].apply(literal_eval)
     test_df['labels'] = test_df['labels'].apply(lambda x: [raw2pro.get(item, item) for item in x])
-    test_df['labelidx'] = label_encoder.transform(test_df['labels'].to_list()).astype(list)
     
     if args.embedding == 'drone-sbert':
         model_name_path = f"swardiantara/{args.feature_col}-problem_type-embedding"
@@ -106,8 +104,8 @@ def main():
     batch_size = args.batch_size
     num_epochs = args.n_epochs
 
-    train_dataset = MessageDataset(train_df, tokenizer, max_seq_length)
-    test_dataset = MessageDataset(test_df, tokenizer, max_seq_length)
+    train_dataset = MessageDataset(train_df, tokenizer, max_seq_length, LABEL_COLUMNS)
+    test_dataset = MessageDataset(test_df, tokenizer, max_seq_length, LABEL_COLUMNS)
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-word_embeds=( all-MiniLM-L6-v2 all-MiniLM-L12-v2 all-mpnet-base-v2 all-distilroberta-v1 )
+word_embeds=( drone-sbert bert-base-uncased neo-bert modern-bert )
 freezes=( true false )
 seeds=( 14298463 24677315 37622020 43782163 52680723 67351593 70681460 87212562 90995999 99511865 )
 

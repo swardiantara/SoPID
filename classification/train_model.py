@@ -103,10 +103,10 @@ def set_seed(seed: int = 42) -> None:
 
 def main():
     # Set global seed for reproducibility
-    set_seed()
+    args = get_args()
+    set_seed(args.seed)
     # Set device (GPU if available, else CPU)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    args = get_args()
 
     # prepare output directory
     freeze = 'freeze' if args.freeze_embedding else 'unfreeze'
@@ -282,7 +282,7 @@ def main():
     # Save the model's hidden state to a 2D plot
     # visualize_projection(merged_loader, idx2pro, best_model.to(device), device, workdir)
     # Save the model
-    torch.save(best_model_state, os.path.join(workdir, 'sentence_pytorch_model.pt'))
+    # torch.save(best_model_state, os.path.join(workdir, 'sentence_pytorch_model.pt'))
 
     return exit(0)
 

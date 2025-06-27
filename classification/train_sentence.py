@@ -13,7 +13,7 @@ from torch.utils.data import DataLoader
 from transformers import AutoModel, AutoTokenizer
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support, classification_report, confusion_matrix, f1_score
 
-from utils import SentenceDataset, visualize_projection
+from utils import SentenceDataset
 from model import ProblemClassifier
 
 parser = argparse.ArgumentParser(description="Problem type classification")

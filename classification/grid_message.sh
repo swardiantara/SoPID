@@ -7,9 +7,9 @@ for embedding in "${word_embeds[@]}"; do
     for seed in "${seeds[@]}"; do
         for freeze in "${freezes[@]}"; do
             if [ "$freeze" = true ]; then
-                python train_model.py --embedding "$embedding" --seed "$seed" --feature_col sentence --freeze_embedding 
+                python train_message.py --embedding "$embedding" --seed "$seed" --feature_col message --freeze_embedding 
             else
-                python train_model.py --embedding "$embedding" --seed "$seed" --feature_col sentence
+                python train_message.py --embedding "$embedding" --seed "$seed" --feature_col message
             fi
         done
     done

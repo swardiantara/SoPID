@@ -41,23 +41,20 @@ class SentenceDataset(Dataset):
 
 
 class MessageDataset(Dataset):
-    def __init__(self, dataframe: pd.DataFrame, tokenizer, max_length, label_encoder=None):
+    def __init__(self, dataframe: pd.DataFrame, tokenizer, max_length, LABEL_COLUMNS):
         self.data = dataframe
         self.tokenizer = tokenizer
         self.max_len = max_length
-        
-        # Initialize label encoder
-        # if label_encoder is None:
-        #     self.label_encoder = MultiLabelBinarizer()
-        #     self.labels = self.label_encoder.fit_transform(dataframe['labels'].to_list())
-        # else:
-        #     self.label_encoder = label_encoder
-        #     self.labels = label_encoder.transform(dataframe['labels'].to_list())
+        self.LABEL_COLUMNS = LABEL_COLUMNS
         
     def __len__(self):
         return len(self.data)
     
     def __getitem__(self, idx):
+        data_row = self.data.iloc[idx]
+        text = data_row['message']
+        labels = data_row[self.LABEL_COLUMNS]
+
         text = str(self.data.iloc[idx]['message'])
         encoding = self.tokenizer(
             text,
@@ -70,8 +67,8 @@ class MessageDataset(Dataset):
         return {
             'input_ids': encoding['input_ids'].squeeze(),
             'attention_mask': encoding['attention_mask'].squeeze(),
-            'labels': torch.tensor(self.labels[idx], dtype=torch.long),
-            "labelidx": self.labels[idx],
+            'labels': torch.tensor(labels, dtype=torch.long),
+            "labelidx": labels,
         }
 
 

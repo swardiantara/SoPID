@@ -145,7 +145,7 @@ def main():
     for epoch in range(num_epochs):
         model.train()
         total_train_loss = 0.0
-        for batch in tqdm(train_loader, desc="Training"):
+        for batch in tqdm(train_loader, desc="Training..."):
             optimizer.zero_grad()
             input_ids = batch["input_ids"].to(device)
             attention_mask = batch["attention_mask"].to(device)
@@ -173,8 +173,8 @@ def main():
 
                 outputs = model(input_ids, attention_mask)
 
-                preds = torch.sigmoid(outputs) > 0.5
-                val_epoch_preds.extend(preds.cpu().numpy())
+                preds = [1 if element >= 0.5 else 0 for element in torch.sigmoid(outputs)]
+                val_epoch_preds.extend(preds)
                 val_epoch_labels.extend(labels)
 
         val_acc_epoch = accuracy_score(val_epoch_labels, val_epoch_preds)
@@ -196,16 +196,16 @@ def main():
     all_preds_multiclass = []
     all_preds_probs_multiclass = []
     with torch.no_grad():
-        for batch in tqdm(test_loader, desc="Training"):
+        for batch in tqdm(test_loader, desc="Evaluation..."):
             input_ids = batch["input_ids"].to(device)
             attention_mask = batch["attention_mask"].to(device)
             labels = batch["labelidx"]
 
             outputs = model(input_ids, attention_mask)
 
-            preds = torch.sigmoid(outputs) > 0.5
-            all_preds_multiclass.extend(preds.cpu().numpy())
-            all_labels_multiclass.extend(labels.cpu().numpy())
+            preds = [1 if element >= 0.5 else 0 for element in torch.sigmoid(outputs)]
+            all_preds_multiclass.extend(preds)
+            all_labels_multiclass.extend(labels)
             all_preds_probs_multiclass.extend(torch.sigmoid(outputs).cpu().numpy())
     
     # preds_names = [class_order[i] for i, val in enumerate(all_preds_multiclass) if val == 1]

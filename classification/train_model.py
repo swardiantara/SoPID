@@ -222,6 +222,8 @@ def main():
     # Calculate multiclass classification accuracy and report
     preds_decoded = [idx2pro.get(key) for key in all_preds_multiclass]
     tests_decoded = [idx2pro.get(key) for key in all_labels_multiclass]
+    print(f'preds_decoded: {preds_decoded}')
+    print(f'tests_decoded: {tests_decoded}')
     # Save the input, label, and preds for error analysis
     prediction_df = pd.DataFrame()
     prediction_df["message"] = test_df["message"]
@@ -233,7 +235,7 @@ def main():
     prediction_df.to_excel(os.path.join(
         workdir, "prediction.xlsx"), index=False)
 
-    print(prediction_df.head(5))
+    # print(prediction_df.head(5))
     # Calculate multiclass classification report
     accuracy = accuracy_score(tests_decoded, preds_decoded)
     f1_weighted = f1_score(tests_decoded, preds_decoded, average='weighted')

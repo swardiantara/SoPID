@@ -49,6 +49,7 @@ def get_args():
                         help="Wether to freeze the pre-trained embedding's parameter.")
     
     args = parser.parse_args()
+    return args
 
 
 def set_seed(seed: int = 42) -> None:

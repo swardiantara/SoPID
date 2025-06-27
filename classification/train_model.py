@@ -11,7 +11,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from torch.utils.data import DataLoader
 from transformers import AutoModel, AutoTokenizer
-from sklearn.metrics import accuracy_score, precision_recall_fscore_support, classification_report, confusion_matrix
+from sklearn.metrics import accuracy_score, precision_recall_fscore_support, classification_report, confusion_matrix, f1_score
 
 from utils import SentenceDataset, visualize_projection
 from model import ProblemClassifier
@@ -185,15 +185,15 @@ def main():
                 val_epoch_preds.extend(pred_label)
 
         val_acc_epoch = accuracy_score(val_epoch_labels, val_epoch_preds)
-        precision, recall, f1_score, _ = precision_recall_fscore_support(val_epoch_labels, val_epoch_preds, average='weighted')
+        precision, recall, val_f1, _ = precision_recall_fscore_support(val_epoch_labels, val_epoch_preds, average='weighted')
         print("Accuracy:", val_acc_epoch)
         print("Precision:", precision)
         print("Recall:", recall)
-        print("F1 Score:", f1_score)
+        print("F1 Score:", val_f1)
 
         # Check if the current epoch is the best
-        if (f1_score > best_f1_epoch and val_acc_epoch > best_acc_epoch) or (f1_score > best_f1_epoch and val_acc_epoch >= best_acc_epoch) or (f1_score >= best_f1_epoch and val_acc_epoch > best_acc_epoch):
-            best_f1_epoch = f1_score
+        if (val_f1 > best_f1_epoch and val_acc_epoch > best_acc_epoch) or (val_f1 > best_f1_epoch and val_acc_epoch >= best_acc_epoch) or (val_f1 >= best_f1_epoch and val_acc_epoch > best_acc_epoch):
+            best_f1_epoch = val_f1
             best_acc_epoch = val_acc_epoch
             # Save the model's state (weights and other parameters)
             best_epoch = epoch + 1

@@ -96,7 +96,7 @@ def main():
     set_seed()
     # Set device (GPU if available, else CPU)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    args = parser.parse_args()
+    args = get_args()
 
     # prepare output directory
     freeze = 'freeze' if args.freeze_embedding else 'unfreeze'

@@ -123,7 +123,7 @@ def main():
             optimizer.zero_grad()
             input_ids = batch["input_ids"].to(device)
             attention_mask = batch["attention_mask"].to(device)
-            labels = batch["label"].to(device)
+            labels = batch["labels"].to(device)
 
             outputs = model(input_ids, attention_mask)
             loss = criterion(outputs, labels)

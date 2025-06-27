@@ -54,8 +54,7 @@ class MessageDataset(Dataset):
         data_row = self.data.iloc[idx]
         text = data_row['message']
         labels = list(data_row[self.LABEL_COLUMNS])
-
-        text = str(self.data.iloc[idx]['message'])
+        
         encoding = self.tokenizer(
             text,
             max_length=self.max_len,
@@ -67,7 +66,7 @@ class MessageDataset(Dataset):
         return {
             'input_ids': encoding['input_ids'].squeeze(),
             'attention_mask': encoding['attention_mask'].squeeze(),
-            'labels': torch.tensor(labels, dtype=torch.long),
+            'labels': torch.FloatTensor(labels),
             "labelidx": labels,
         }
 

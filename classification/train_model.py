@@ -211,16 +211,14 @@ def main():
             input_ids = batch["input_ids"].to(device)
             attention_mask = batch["attention_mask"].to(device)
             labels = batch["labelidx"]
-            print(f"labels: {labels}")
             logits_multiclass_test = model(input_ids, attention_mask)
             logits_multiclass_test = torch.softmax(logits_multiclass_test, dim=1)
             predicted_probs_multiclass_test, predicted_labels_multiclass_test = torch.max(logits_multiclass_test, dim=1)
-            all_labels_multiclass.extend(labels)
+            all_labels_multiclass.extend(labels.cpu().numpy())
             all_preds_multiclass.extend(predicted_labels_multiclass_test.cpu().numpy())
             all_preds_probs_multiclass.extend(predicted_probs_multiclass_test.cpu().numpy())
 
     # Calculate multiclass classification accuracy and report
-    print(f'all_labels_multiclass: {all_labels_multiclass}')
     preds_decoded = [idx2pro.get(key) for key in all_preds_multiclass]
     tests_decoded = [idx2pro.get(key) for key in all_labels_multiclass]
     # print(f'preds_decoded: {preds_decoded}')

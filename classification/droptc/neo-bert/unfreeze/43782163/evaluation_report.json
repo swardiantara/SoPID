@@ -6,21 +6,21 @@
         "support": 3.0
     },
     "HardwareFault": {
-        "precision": 0.9615384615384616,
-        "recall": 0.8928571428571429,
-        "f1-score": 0.9259259259259259,
+        "precision": 0.8235294117647058,
+        "recall": 1.0,
+        "f1-score": 0.9032258064516129,
         "support": 28.0
     },
     "Normal": {
-        "precision": 0.9548872180451128,
-        "recall": 0.9621212121212122,
-        "f1-score": 0.9584905660377359,
+        "precision": 0.9838709677419355,
+        "recall": 0.9242424242424242,
+        "f1-score": 0.953125,
         "support": 132.0
     },
     "ParamViolation": {
-        "precision": 0.875,
-        "recall": 0.7,
-        "f1-score": 0.7777777777777778,
+        "precision": 0.6923076923076923,
+        "recall": 0.9,
+        "f1-score": 0.782608695652174,
         "support": 10.0
     },
     "RegulationViolation": {
@@ -30,33 +30,33 @@
         "support": 3.0
     },
     "SoftwareFault": {
-        "precision": 0.6785714285714286,
-        "recall": 0.95,
-        "f1-score": 0.7916666666666666,
+        "precision": 0.7619047619047619,
+        "recall": 0.8,
+        "f1-score": 0.7804878048780488,
         "support": 20.0
     },
     "SurroundingEnvironment": {
-        "precision": 1.0,
-        "recall": 0.6153846153846154,
-        "f1-score": 0.7619047619047619,
+        "precision": 0.9090909090909091,
+        "recall": 0.7692307692307693,
+        "f1-score": 0.8333333333333334,
         "support": 13.0
     },
-    "accuracy": 0.9186602870813397,
+    "accuracy": 0.9138755980861244,
     "macro_avg": {
-        "precision": 0.9242853011650005,
-        "recall": 0.8743375671947101,
-        "f1-score": 0.8879665283304098,
+        "precision": 0.881529106115715,
+        "recall": 0.9133533133533133,
+        "f1-score": 0.8932543771878813,
         "support": 209.0
     },
     "weighted_avg": {
-        "precision": 0.9296153984519636,
-        "recall": 0.9186602870813397,
-        "f1-score": 0.9184811179845936,
+        "precision": 0.9230102643574222,
+        "recall": 0.9138755980861244,
+        "f1-score": 0.9156554974548383,
         "support": 209.0
     },
     "micro_avg": {
-        "precision": 0.9186602870813397,
-        "recall": 0.9186602870813397,
-        "f1-score": 0.9186602870813397
+        "precision": 0.9138755980861244,
+        "recall": 0.9138755980861244,
+        "f1-score": 0.9138755980861244
     }
 }

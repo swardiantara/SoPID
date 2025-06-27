@@ -8,7 +8,7 @@
     "freeze_embedding": true,
     "device": "cuda",
     "scenario_dir": "droptc/neo-bert/freeze/43782163",
-    "best_epoch": 15,
-    "best_val_f1": 0.825716653422711,
-    "best_val_acc": 0.8421052631578947
+    "best_epoch": 13,
+    "best_val_f1": 0.8340114603272498,
+    "best_val_acc": 0.8516746411483254
 }

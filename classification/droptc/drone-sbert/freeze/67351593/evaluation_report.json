@@ -6,9 +6,9 @@
         "support": 3.0
     },
     "HardwareFault": {
-        "precision": 0.8387096774193549,
+        "precision": 0.8666666666666667,
         "recall": 0.9285714285714286,
-        "f1-score": 0.8813559322033898,
+        "f1-score": 0.896551724137931,
         "support": 28.0
     },
     "Normal": {
@@ -18,9 +18,9 @@
         "support": 132.0
     },
     "ParamViolation": {
-        "precision": 0.6666666666666666,
+        "precision": 0.6153846153846154,
         "recall": 0.8,
-        "f1-score": 0.7272727272727273,
+        "f1-score": 0.6956521739130435,
         "support": 10.0
     },
     "RegulationViolation": {
@@ -43,15 +43,15 @@
     },
     "accuracy": 0.9043062200956937,
     "macro_avg": {
-        "precision": 0.8794552534237455,
+        "precision": 0.876123101704497,
         "recall": 0.8739784025498312,
-        "f1-score": 0.8712786568677026,
+        "f1-score": 0.8689322623783965,
         "support": 209.0
     },
     "weighted_avg": {
-        "precision": 0.9124108995931016,
+        "precision": 0.9137026468950359,
         "recall": 0.9043062200956937,
-        "f1-score": 0.9057873344770119,
+        "f1-score": 0.9063101892165828,
         "support": 209.0
     },
     "micro_avg": {

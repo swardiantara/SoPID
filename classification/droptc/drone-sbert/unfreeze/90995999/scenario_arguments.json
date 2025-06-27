@@ -8,7 +8,7 @@
     "freeze_embedding": false,
     "device": "cuda",
     "scenario_dir": "droptc/drone-sbert/unfreeze/90995999",
-    "best_epoch": 4,
-    "best_val_f1": 0.9195313170628948,
+    "best_epoch": 2,
+    "best_val_f1": 0.919073011281865,
     "best_val_acc": 0.9186602870813397
 }

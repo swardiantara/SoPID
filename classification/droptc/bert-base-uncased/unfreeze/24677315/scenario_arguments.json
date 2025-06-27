@@ -8,7 +8,7 @@
     "freeze_embedding": false,
     "device": "cuda",
     "scenario_dir": "droptc/bert-base-uncased/unfreeze/24677315",
-    "best_epoch": 6,
-    "best_val_f1": 0.9118014868950727,
-    "best_val_acc": 0.9138755980861244
+    "best_epoch": 5,
+    "best_val_f1": 0.9099655199842392,
+    "best_val_acc": 0.9090909090909091
 }

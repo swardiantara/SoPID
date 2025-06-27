@@ -12,15 +12,15 @@
         "support": 28.0
     },
     "Normal": {
-        "precision": 0.8311688311688312,
-        "recall": 0.9696969696969697,
-        "f1-score": 0.8951048951048951,
+        "precision": 0.8012422360248447,
+        "recall": 0.9772727272727273,
+        "f1-score": 0.8805460750853242,
         "support": 132.0
     },
     "ParamViolation": {
-        "precision": 0.6666666666666666,
-        "recall": 0.4,
-        "f1-score": 0.5,
+        "precision": 1.0,
+        "recall": 0.3,
+        "f1-score": 0.46153846153846156,
         "support": 10.0
     },
     "RegulationViolation": {
@@ -30,33 +30,33 @@
         "support": 3.0
     },
     "SoftwareFault": {
-        "precision": 0.8,
-        "recall": 0.6,
-        "f1-score": 0.6857142857142857,
+        "precision": 0.8125,
+        "recall": 0.65,
+        "f1-score": 0.7222222222222222,
         "support": 20.0
     },
     "SurroundingEnvironment": {
         "precision": 1.0,
-        "recall": 0.6153846153846154,
-        "f1-score": 0.7619047619047619,
+        "recall": 0.23076923076923078,
+        "f1-score": 0.375,
         "support": 13.0
     },
-    "accuracy": 0.8421052631578947,
+    "accuracy": 0.8229665071770335,
     "macro_avg": {
-        "precision": 0.7454050711193568,
-        "recall": 0.5342633556919271,
-        "f1-score": 0.6015212101465471,
+        "precision": 0.7905346051464063,
+        "recall": 0.47325769468626605,
+        "f1-score": 0.5438901838782707,
         "support": 209.0
     },
     "weighted_avg": {
-        "precision": 0.8332102984734563,
-        "recall": 0.8421052631578947,
-        "f1-score": 0.825716653422711,
+        "precision": 0.8314544265802847,
+        "recall": 0.8229665071770335,
+        "f1-score": 0.7941090802083478,
         "support": 209.0
     },
     "micro_avg": {
-        "precision": 0.8421052631578947,
-        "recall": 0.8421052631578947,
-        "f1-score": 0.8421052631578947
+        "precision": 0.8229665071770335,
+        "recall": 0.8229665071770335,
+        "f1-score": 0.8229665071770335
     }
 }

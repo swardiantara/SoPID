@@ -1,8 +1,8 @@
 {
     "CommunicationIssue": {
         "precision": 1.0,
-        "recall": 0.6666666666666666,
-        "f1-score": 0.8,
+        "recall": 1.0,
+        "f1-score": 1.0,
         "support": 3.0
     },
     "HardwareFault": {
@@ -12,15 +12,15 @@
         "support": 28.0
     },
     "Normal": {
-        "precision": 0.9555555555555556,
+        "precision": 0.9699248120300752,
         "recall": 0.9772727272727273,
-        "f1-score": 0.9662921348314607,
+        "f1-score": 0.9735849056603774,
         "support": 132.0
     },
     "ParamViolation": {
-        "precision": 0.8888888888888888,
+        "precision": 1.0,
         "recall": 0.8,
-        "f1-score": 0.8421052631578947,
+        "f1-score": 0.8888888888888888,
         "support": 10.0
     },
     "RegulationViolation": {
@@ -36,27 +36,27 @@
         "support": 20.0
     },
     "SurroundingEnvironment": {
-        "precision": 0.8888888888888888,
-        "recall": 0.6153846153846154,
-        "f1-score": 0.7272727272727273,
+        "precision": 0.8181818181818182,
+        "recall": 0.6923076923076923,
+        "f1-score": 0.75,
         "support": 13.0
     },
-    "accuracy": 0.9090909090909091,
+    "accuracy": 0.9186602870813397,
     "macro_avg": {
-        "precision": 0.8969091984619936,
-        "recall": 0.8145973074544504,
-        "f1-score": 0.846600240960554,
+        "precision": 0.9047339551589307,
+        "recall": 0.8732053660625089,
+        "f1-score": 0.8861436222872944,
         "support": 209.0
     },
     "weighted_avg": {
-        "precision": 0.912063426022236,
-        "recall": 0.9090909090909091,
-        "f1-score": 0.9080365945261736,
+        "precision": 0.9220570195464264,
+        "recall": 0.9186602870813397,
+        "f1-score": 0.9191654775509651,
         "support": 209.0
     },
     "micro_avg": {
-        "precision": 0.9090909090909091,
-        "recall": 0.9090909090909091,
-        "f1-score": 0.9090909090909091
+        "precision": 0.9186602870813397,
+        "recall": 0.9186602870813397,
+        "f1-score": 0.9186602870813397
     }
 }

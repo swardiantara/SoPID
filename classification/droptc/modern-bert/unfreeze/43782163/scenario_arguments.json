@@ -8,7 +8,7 @@
     "freeze_embedding": false,
     "device": "cuda",
     "scenario_dir": "droptc/modern-bert/unfreeze/43782163",
-    "best_epoch": 9,
-    "best_val_f1": 0.9210571694517437,
-    "best_val_acc": 0.9234449760765551
+    "best_epoch": 5,
+    "best_val_f1": 0.9260748613911852,
+    "best_val_acc": 0.9282296650717703
 }

@@ -52,7 +52,6 @@ class MessageDataset(Dataset):
     def __getitem__(self, idx):
         text = self.data.iloc[idx]['message']
         label = self.data.iloc[idx]['labelidx']
-        class_label = self.data.iloc[idx]['labels']
         
         encoding = self.tokenizer(
             text,
@@ -67,7 +66,6 @@ class MessageDataset(Dataset):
             'attention_mask': encoding['attention_mask'].squeeze(),
             'labels': torch.tensor(label, dtype=torch.float32),
             "labelidx": label,
-            'label_name': class_label,
         }
 
 

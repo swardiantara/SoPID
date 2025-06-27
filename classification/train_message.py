@@ -86,6 +86,10 @@ def label_mapper(label_list):
                 binary_vector[pro2idx[label]] = 1
         return binary_vector
 
+def class_mapper(binary_vector):
+        """Inner function that converts one binary vector to labels"""
+        return [class_order[i] for i, val in enumerate(binary_vector) if val == 1]
+
 def main():
     # Set global seed for reproducibility
     args = get_args()
@@ -171,7 +175,7 @@ def main():
 
                 preds = torch.sigmoid(outputs) > 0.5
                 val_epoch_preds.extend(preds.cpu().numpy())
-                val_epoch_labels.extend(labels.cpu().numpy())
+                val_epoch_labels.extend(labels)
 
         val_acc_epoch = accuracy_score(val_epoch_labels, val_epoch_preds)
         val_f1 = f1_score(val_epoch_labels, val_epoch_preds, average='weighted')
@@ -204,16 +208,17 @@ def main():
             all_labels_multiclass.extend(labels.cpu().numpy())
             all_preds_probs_multiclass.extend(torch.sigmoid(outputs).cpu().numpy())
     
-    preds_names = [list(label_encoder.inverse_transform(key)) for key in all_preds_multiclass]
+    # preds_names = [class_order[i] for i, val in enumerate(all_preds_multiclass) if val == 1]
+    # [list(label_encoder.inverse_transform(key)) for key in all_preds_multiclass]
     # label_names = [list(label_encoder.inverse_transform(key)) for key in all_labels_multiclass]
     preds_decoded = all_preds_multiclass
     tests_decoded = all_labels_multiclass
     prediction_df = pd.DataFrame()
     prediction_df["message"] = test_df["message"]
     prediction_df['label_name'] = test_df['labels']
-    prediction_df['pred_name'] = list(preds_names)
     prediction_df["labelidx"] = test_df['labelidx']
     prediction_df["predidx"] = list(preds_decoded)
+    prediction_df['pred_name'] = test_df['predidx'].map(class_mapper)
     prediction_df.to_excel(os.path.join(workdir, "prediction.xlsx"), index=False)
 
     accuracy = accuracy_score(tests_decoded, preds_decoded)

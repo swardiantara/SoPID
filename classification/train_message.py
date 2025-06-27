@@ -85,7 +85,9 @@ def main():
     print(train_df.head(5))
     train_df['labels'] = train_df['labels'].apply(lambda x: [raw2pro.get(item, item) for item in x])
     print(train_df.head(5))
-    train_df['labelidx'] = label_encoder.fit_transform(train_df['labels'].to_list())
+    print('label encode: ')
+    print(label_encoder.fit_transform(train_df['labels'].to_list()))
+    # train_df['labelidx'] = 
     print(train_df.head(5))
     test_df = pd.read_excel(os.path.join('dataset', f'test_{args.feature_col}.xlsx'))
     test_df["labels"] = test_df['labels'].apply(literal_eval)

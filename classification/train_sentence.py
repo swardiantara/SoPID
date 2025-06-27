@@ -140,7 +140,7 @@ def main():
     train_dataset = SentenceDataset(train_df, tokenizer, max_seq_length)
     test_dataset = SentenceDataset(test_df, tokenizer, max_seq_length)
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
+    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
     model = ProblemClassifier(embedding_model, tokenizer, freeze_embedding=args.freeze_embedding).to(device)
 

@@ -1,0 +1,14 @@
+{
+    "feature_col": "sentence",
+    "output_dir": "droptc",
+    "embedding": "modern-bert",
+    "n_epochs": 15,
+    "batch_size": 8,
+    "seed": 37622020,
+    "freeze_embedding": false,
+    "device": "cuda",
+    "scenario_dir": "droptc/modern-bert/unfreeze/37622020",
+    "best_epoch": 15,
+    "best_val_f1": 0.9016011568823805,
+    "best_val_acc": 0.9043062200956937
+}

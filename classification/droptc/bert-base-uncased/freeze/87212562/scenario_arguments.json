@@ -1,0 +1,14 @@
+{
+    "feature_col": "sentence",
+    "output_dir": "droptc",
+    "embedding": "bert-base-uncased",
+    "n_epochs": 15,
+    "batch_size": 8,
+    "seed": 87212562,
+    "freeze_embedding": true,
+    "device": "cuda",
+    "scenario_dir": "droptc/bert-base-uncased/freeze/87212562",
+    "best_epoch": 15,
+    "best_val_f1": 0.6044179159431219,
+    "best_val_acc": 0.7033492822966507
+}

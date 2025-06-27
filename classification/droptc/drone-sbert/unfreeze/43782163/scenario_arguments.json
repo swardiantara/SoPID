@@ -1,0 +1,14 @@
+{
+    "feature_col": "sentence",
+    "output_dir": "droptc",
+    "embedding": "drone-sbert",
+    "n_epochs": 15,
+    "batch_size": 8,
+    "seed": 43782163,
+    "freeze_embedding": false,
+    "device": "cuda",
+    "scenario_dir": "droptc/drone-sbert/unfreeze/43782163",
+    "best_epoch": 4,
+    "best_val_f1": 0.9195313170628948,
+    "best_val_acc": 0.9186602870813397
+}

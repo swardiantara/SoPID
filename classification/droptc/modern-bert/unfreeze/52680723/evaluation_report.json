@@ -1,0 +1,62 @@
+{
+    "CommunicationIssue": {
+        "precision": 1.0,
+        "recall": 0.6666666666666666,
+        "f1-score": 0.8,
+        "support": 3.0
+    },
+    "HardwareFault": {
+        "precision": 0.8666666666666667,
+        "recall": 0.9285714285714286,
+        "f1-score": 0.896551724137931,
+        "support": 28.0
+    },
+    "Normal": {
+        "precision": 0.9416058394160584,
+        "recall": 0.9772727272727273,
+        "f1-score": 0.9591078066914498,
+        "support": 132.0
+    },
+    "ParamViolation": {
+        "precision": 0.875,
+        "recall": 0.7,
+        "f1-score": 0.7777777777777778,
+        "support": 10.0
+    },
+    "RegulationViolation": {
+        "precision": 1.0,
+        "recall": 0.6666666666666666,
+        "f1-score": 0.8,
+        "support": 3.0
+    },
+    "SoftwareFault": {
+        "precision": 0.75,
+        "recall": 0.75,
+        "f1-score": 0.75,
+        "support": 20.0
+    },
+    "SurroundingEnvironment": {
+        "precision": 1.0,
+        "recall": 0.7692307692307693,
+        "f1-score": 0.8695652173913043,
+        "support": 13.0
+    },
+    "accuracy": 0.9138755980861244,
+    "macro_avg": {
+        "precision": 0.9190389294403892,
+        "recall": 0.7797726083440368,
+        "f1-score": 0.8361432179997805,
+        "support": 209.0
+    },
+    "weighted_avg": {
+        "precision": 0.9153523323903654,
+        "recall": 0.9138755980861244,
+        "f1-score": 0.911903370157886,
+        "support": 209.0
+    },
+    "micro_avg": {
+        "precision": 0.9138755980861244,
+        "recall": 0.9138755980861244,
+        "f1-score": 0.9138755980861244
+    }
+}

@@ -174,6 +174,7 @@ def main():
                 outputs = model(input_ids, attention_mask)
 
                 preds = [[1 if logit >= 0.5 else 0 for logit in logits] for logits in torch.sigmoid(outputs)]
+                assert len(labels) == len(preds), f'labels: {len(labels)}, preds: {len(preds)}'
                 val_epoch_preds.extend(preds)
                 val_epoch_labels.extend(labels)
 
@@ -203,6 +204,7 @@ def main():
 
             outputs = model(input_ids, attention_mask)
             preds = [[1 if logit >= 0.5 else 0 for logit in logits] for logits in torch.sigmoid(outputs)]
+            assert len(labels) == len(preds), f'labels: {len(labels)}, preds: {len(preds)}'
             all_preds_multiclass.extend(preds)
             all_labels_multiclass.extend(labels)
             all_preds_probs_multiclass.extend(torch.sigmoid(outputs).cpu().numpy())

@@ -124,7 +124,7 @@ def main():
     batch_size = args.batch_size
     num_epochs = args.n_epochs
 
-    merged_dataset = SentenceDataset(pd.concat[train_df, test_df], tokenizer, max_seq_length)
+    merged_dataset = SentenceDataset(pd.concat([train_df, test_df]), tokenizer, max_seq_length)
     merged_loader = DataLoader(merged_dataset, batch_size=batch_size, shuffle=False)
     train_dataset = SentenceDataset(train_df, tokenizer, max_seq_length)
     test_dataset = SentenceDataset(test_df, tokenizer, max_seq_length)

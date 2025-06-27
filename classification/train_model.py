@@ -38,6 +38,16 @@ idx2pro = {
     6: 'RegulationViolation'
 }
 
+pro2idx = {
+    'Normal': 0,
+    'HardwareFault': 1,
+    'SoftwareFault': 2,
+    'SurroundingEnvironment': 3,
+    'ParamViolation': 4,
+    'CommunicationIssue': 5,
+    'RegulationViolation': 6
+}
+
 slabel2idx = {
     'normal': 0,
     'HwFlt': 1,
@@ -223,6 +233,7 @@ def main():
     prediction_df.to_excel(os.path.join(
         workdir, "prediction.xlsx"), index=False)
 
+    print(prediction_df.head(5))
     # Calculate multiclass classification report
     accuracy = accuracy_score(tests_decoded, preds_decoded)
     f1_weighted = f1_score(tests_decoded, preds_decoded, average='weighted')
@@ -270,7 +281,7 @@ def main():
     plt.close()
 
     # Save the model's hidden state to a 2D plot
-    visualize_projection(merged_loader, sidx2label, best_model.to(device), device, workdir)
+    visualize_projection(merged_loader, idx2pro, best_model.to(device), device, workdir)
     # Save the model
     torch.save(best_model_state, 'sentence_pytorch_model.pt')
 

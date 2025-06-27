@@ -1,9 +1,11 @@
-import torch
-from torch.utils.data import Dataset
 import os
+
+import torch
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.manifold import TSNE
+from torch.utils.data import Dataset
+from sklearn.preprocessing import MultiLabelBinarizer
 
 class SentenceDataset(Dataset):
     def __init__(self, dataframe, tokenizer, max_length):
@@ -16,7 +18,7 @@ class SentenceDataset(Dataset):
 
     def __getitem__(self, index):
         text = self.data.iloc[index]['sentence']
-        label = self.data.iloc[index]["label"]
+        label = self.data.iloc[index]["labelidx"]
 
         encoding = self.tokenizer(
             text,
@@ -36,7 +38,42 @@ class SentenceDataset(Dataset):
             "labelidx": label,
             "label": torch.tensor(label, dtype=torch.long),
         }
+
+
+class MessageDataset(Dataset):
+    def __init__(self, dataframe: pd.DataFrame, tokenizer, max_length, label_encoder=None):
+        self.data = dataframe
+        self.tokenizer = tokenizer
+        self.max_len = max_length
+        
+        # Initialize label encoder
+        # if label_encoder is None:
+        #     self.label_encoder = MultiLabelBinarizer()
+        #     self.labels = self.label_encoder.fit_transform(dataframe['labels'].to_list())
+        # else:
+        #     self.label_encoder = label_encoder
+        #     self.labels = label_encoder.transform(dataframe['labels'].to_list())
+        
+    def __len__(self):
+        return len(self.data)
     
+    def __getitem__(self, idx):
+        text = str(self.data.iloc[idx]['message'])
+        encoding = self.tokenizer(
+            text,
+            max_length=self.max_len,
+            padding='max_length',
+            truncation=True,
+            return_tensors='pt'
+        )
+        
+        return {
+            'input_ids': encoding['input_ids'].squeeze(),
+            'attention_mask': encoding['attention_mask'].squeeze(),
+            'labels': torch.tensor(self.labels[idx], dtype=torch.long),
+            "labelidx": self.labels[idx],
+        }
+
 
 
 def visualize_projection(dataset_loader, idx2label, model, device, output_dir):

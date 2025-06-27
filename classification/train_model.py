@@ -221,8 +221,6 @@ def main():
     # Calculate multiclass classification accuracy and report
     preds_decoded = [idx2pro.get(key) for key in all_preds_multiclass]
     tests_decoded = [idx2pro.get(key) for key in all_labels_multiclass]
-    # print(f'preds_decoded: {preds_decoded}')
-    # print(f'tests_decoded: {tests_decoded}')
     # Save the input, label, and preds for error analysis
     prediction_df = pd.DataFrame()
     prediction_df["message"] = test_df["message"]
@@ -282,9 +280,9 @@ def main():
     plt.close()
 
     # Save the model's hidden state to a 2D plot
-    visualize_projection(merged_loader, idx2pro, best_model.to(device), device, workdir)
+    # visualize_projection(merged_loader, idx2pro, best_model.to(device), device, workdir)
     # Save the model
-    torch.save(best_model_state, 'sentence_pytorch_model.pt')
+    torch.save(best_model_state, os.path.join(workdir, 'sentence_pytorch_model.pt'))
 
     return exit(0)
 

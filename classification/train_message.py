@@ -28,9 +28,22 @@ raw2pro = {
     'HwFlt': 'HardwareFault',
     'ConfIss': 'ParamViolation',
     'VioReg': 'RegulationViolation',
-    'CommIss': "CommunicationIssue",
+    'CommIss': 'CommunicationIssue',
     'Swflt': 'SoftwareFault'
 }
+
+pro2idx = {
+    'Normal': 0,
+    'SurroundingEnvironment': 1,
+    'HardwareFault': 2,
+    'ParamViolation': 3,
+    'RegulationViolation': 4,
+    'CommunicationIssue': 5,
+    'SoftwareFault': 6
+}
+
+
+# Normal	SurroundingEnvironment	HardwareFault	ParamViolation	RegulationViolation	CommunicationIssue	SoftwareFault
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -65,6 +78,14 @@ def set_seed(seed: int = 42) -> None:
     # print(f"Random seed set as {seed}")
 
 
+def label_mapper(label_list, class_order):
+        """Inner function that does the actual mapping for one row"""
+        binary_vector = [0] * len(class_order)
+        for label in label_list:
+            if label in pro2idx:
+                binary_vector[pro2idx[label]] = 1
+        return binary_vector
+
 def main():
     # Set global seed for reproducibility
     args = get_args()
@@ -78,22 +99,18 @@ def main():
     print(f'current scenario: {workdir}')
     os.makedirs(workdir, exist_ok=True)
     
-    label_encoder = MultiLabelBinarizer()
-
+    class_order = [value for _, value in raw2pro.items()]
 
     train_df = pd.read_excel(os.path.join('dataset', f'train_{args.feature_col}.xlsx'))
-    LABEL_COLUMNS = train_df.columns.tolist()[2:]
 
     train_df["labels"] = train_df['labels'].apply(literal_eval)
     train_df['labels'] = train_df['labels'].apply(lambda x: [raw2pro.get(item, item) for item in x])
-    train_input = train_df['message'].to_list()
-    train_label = train_df[LABEL_COLUMNS].values
+    train_df['labelidx'] = train_df['labels'].map(label_mapper)
 
     test_df = pd.read_excel(os.path.join('dataset', f'test_{args.feature_col}.xlsx'))
     test_df["labels"] = test_df['labels'].apply(literal_eval)
     test_df['labels'] = test_df['labels'].apply(lambda x: [raw2pro.get(item, item) for item in x])
-    test_input = test_df['message'].to_list()
-    test_label = test_df[LABEL_COLUMNS].values
+    test_df['labelidx'] = test_df['labels'].map(label_mapper)
     
     if args.embedding == 'drone-sbert':
         model_name_path = f"swardiantara/{args.feature_col}-problem_type-embedding"
@@ -111,8 +128,8 @@ def main():
     batch_size = args.batch_size
     num_epochs = args.n_epochs
 
-    train_dataset = MessageDataset(train_input, train_label, tokenizer, max_seq_length, LABEL_COLUMNS)
-    test_dataset = MessageDataset(test_input, test_label, tokenizer, max_seq_length, LABEL_COLUMNS)
+    train_dataset = MessageDataset(train_df, tokenizer, max_seq_length)
+    test_dataset = MessageDataset(test_df, tokenizer, max_seq_length)
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
 

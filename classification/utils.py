@@ -41,19 +41,18 @@ class SentenceDataset(Dataset):
 
 
 class MessageDataset(Dataset):
-    def __init__(self, input_text, input_label, tokenizer, max_length, LABEL_COLUMNS):
-        self.input_text = input_text
-        self.labels = input_label
+    def __init__(self, dataframe, tokenizer, max_length):
+        self.data = dataframe
         self.tokenizer = tokenizer
         self.max_len = max_length
-        self.LABEL_COLUMNS = LABEL_COLUMNS
         
     def __len__(self):
-        return len(self.input_text)
+        return len(self.data)
     
     def __getitem__(self, idx):
-        text = self.input_text[idx]
-        label = self.labels[idx].astype(float)
+        text = self.data.iloc[idx]['message']
+        label = self.data.iloc[idx]['labelidx']
+        class_label = self.data.iloc[idx]['labels']
         
         encoding = self.tokenizer(
             text,
@@ -66,8 +65,9 @@ class MessageDataset(Dataset):
         return {
             'input_ids': encoding['input_ids'].squeeze(),
             'attention_mask': encoding['attention_mask'].squeeze(),
-            'labels': torch.from_numpy(label),
-            "labelidx": label.tolist(),
+            'labels': torch.tensor(label, dtype=torch.float32),
+            "labelidx": label,
+            'label_name': class_label,
         }
 
 

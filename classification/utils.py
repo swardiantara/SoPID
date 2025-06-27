@@ -48,7 +48,7 @@ def visualize_projection(dataset_loader, idx2label, model, device, output_dir):
             attention_mask = batch["attention_mask"].to(device)
             labels_index = batch["labelidx"]
     
-            embeddings = model.embedding(input_ids, attention_mask)
+            embeddings = model.embedding_model(input_ids, attention_mask)
             all_labels_multiclass.extend(labels_index.cpu().numpy())
             all_embeddings.append(embeddings.last_hidden_state)
     

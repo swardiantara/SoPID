@@ -111,6 +111,7 @@ def main():
     # prepare output directory
     freeze = 'freeze' if args.freeze_embedding else 'unfreeze'
     workdir = os.path.join(args.output_dir, args.embedding, freeze, str(args.seed))
+    print(f'current scenario: {workdir}')
     os.makedirs(workdir, exist_ok=True)
 
     train_df = pd.read_excel(os.path.join('dataset', f'train_{args.feature_col}.xlsx'))
@@ -186,10 +187,6 @@ def main():
 
         val_acc_epoch = accuracy_score(val_epoch_labels, val_epoch_preds)
         precision, recall, val_f1, _ = precision_recall_fscore_support(val_epoch_labels, val_epoch_preds, average='weighted')
-        print("Accuracy:", val_acc_epoch)
-        print("Precision:", precision)
-        print("Recall:", recall)
-        print("F1 Score:", val_f1)
 
         # Check if the current epoch is the best
         if (val_f1 > best_f1_epoch and val_acc_epoch > best_acc_epoch) or (val_f1 > best_f1_epoch and val_acc_epoch >= best_acc_epoch) or (val_f1 >= best_f1_epoch and val_acc_epoch > best_acc_epoch):

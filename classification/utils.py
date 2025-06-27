@@ -53,7 +53,7 @@ class MessageDataset(Dataset):
     
     def __getitem__(self, idx):
         text = self.input_text[idx]
-        tensor_label = torch.FloatTensor(self.labels[idx])
+        label = self.labels[idx]
         
         encoding = self.tokenizer(
             text,
@@ -66,8 +66,8 @@ class MessageDataset(Dataset):
         return {
             'input_ids': encoding['input_ids'].squeeze(),
             'attention_mask': encoding['attention_mask'].squeeze(),
-            'labels': tensor_label,
-            "labelidx": self.labels,
+            'labels': torch.from_numpy(label),
+            "labelidx": label.tolist(),
         }
 
 

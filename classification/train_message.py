@@ -82,17 +82,13 @@ def main():
 
     train_df = pd.read_excel(os.path.join('dataset', f'train_{args.feature_col}.xlsx'))
     train_df["labels"] = train_df['labels'].apply(literal_eval)
-    print(train_df.head(5))
     train_df['labels'] = train_df['labels'].apply(lambda x: [raw2pro.get(item, item) for item in x])
-    print(train_df.head(5))
-    print('label encode: ')
-    print(label_encoder.fit_transform(train_df['labels'].to_list()))
-    # train_df['labelidx'] = 
+    train_df["labelidx"] = label_encoder.fit_transform(train_df['labels'].to_list()).astype(list)
     print(train_df.head(5))
     test_df = pd.read_excel(os.path.join('dataset', f'test_{args.feature_col}.xlsx'))
     test_df["labels"] = test_df['labels'].apply(literal_eval)
     test_df['labels'] = test_df['labels'].apply(lambda x: [raw2pro.get(item, item) for item in x])
-    test_df['labelidx'] = label_encoder.transform(test_df['labels'].to_list())
+    test_df['labelidx'] = label_encoder.transform(test_df['labels'].to_list()).astype(list)
     
     if args.embedding == 'drone-sbert':
         model_name_path = f"swardiantara/{args.feature_col}-problem_type-embedding"

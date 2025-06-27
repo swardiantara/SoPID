@@ -165,7 +165,7 @@ def main():
             for batch in test_loader:
                 input_ids = batch["input_ids"].to(device)
                 attention_mask = batch["attention_mask"].to(device)
-                labels = batch["labelidx"].to(device)
+                labels = batch["labelidx"]
 
                 logits = model(input_ids, attention_mask)
 

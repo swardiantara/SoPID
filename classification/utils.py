@@ -41,9 +41,9 @@ class SentenceDataset(Dataset):
 
 
 class MessageDataset(Dataset):
-    def __init__(self, train_input, train_label, tokenizer, max_length, LABEL_COLUMNS):
-        self.input_text = train_input
-        self.labels = train_label
+    def __init__(self, input_text, input_label, tokenizer, max_length, LABEL_COLUMNS):
+        self.input_text = input_text
+        self.labels = input_label
         self.tokenizer = tokenizer
         self.max_len = max_length
         self.LABEL_COLUMNS = LABEL_COLUMNS

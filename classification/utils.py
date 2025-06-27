@@ -49,7 +49,7 @@ class MessageDataset(Dataset):
         self.LABEL_COLUMNS = LABEL_COLUMNS
         
     def __len__(self):
-        return len(self.data)
+        return len(self.input_text)
     
     def __getitem__(self, idx):
         text = self.input_text[idx]

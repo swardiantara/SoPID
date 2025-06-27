@@ -42,7 +42,7 @@ pro2idx = {
     'SoftwareFault': 6
 }
 
-
+class_order = [value for _, value in raw2pro.items()]
 # Normal	SurroundingEnvironment	HardwareFault	ParamViolation	RegulationViolation	CommunicationIssue	SoftwareFault
 
 def get_args():
@@ -78,7 +78,7 @@ def set_seed(seed: int = 42) -> None:
     # print(f"Random seed set as {seed}")
 
 
-def label_mapper(label_list, class_order):
+def label_mapper(label_list):
         """Inner function that does the actual mapping for one row"""
         binary_vector = [0] * len(class_order)
         for label in label_list:
@@ -98,8 +98,6 @@ def main():
     workdir = os.path.join(args.output_dir, args.embedding, freeze, str(args.seed))
     print(f'current scenario: {workdir}')
     os.makedirs(workdir, exist_ok=True)
-    
-    class_order = [value for _, value in raw2pro.items()]
 
     train_df = pd.read_excel(os.path.join('dataset', f'train_{args.feature_col}.xlsx'))
 

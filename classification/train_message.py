@@ -177,7 +177,7 @@ def main():
                 assert len(labels) == len(preds), f'labels: {len(labels)}, preds: {len(preds)}'
                 val_epoch_preds.extend(preds)
                 val_epoch_labels.extend(labels)
-
+        assert len(val_epoch_labels) == len(val_epoch_preds), f'labels: {len(val_epoch_labels)}, preds: {len(val_epoch_preds)}'
         val_acc_epoch = accuracy_score(val_epoch_labels, val_epoch_preds)
         val_f1 = f1_score(val_epoch_labels, val_epoch_preds, average='weighted')
 

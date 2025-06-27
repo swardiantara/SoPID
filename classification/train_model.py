@@ -202,6 +202,7 @@ def main():
             attention_mask = batch["attention_mask"].to(device)
             labels = batch["labelidx"]
 
+            logits_multiclass_test = model(input_ids, attention_mask)
             logits_multiclass_test = torch.softmax(logits_multiclass_test, dim=1)
             predicted_probs_multiclass_test, predicted_labels_multiclass_test = torch.max(logits_multiclass_test, dim=1)
             all_labels_multiclass.extend(labels)

@@ -53,7 +53,7 @@ class MessageDataset(Dataset):
     def __getitem__(self, idx):
         data_row = self.data.iloc[idx]
         text = data_row['message']
-        labels = data_row[self.LABEL_COLUMNS]
+        labels = list(data_row[self.LABEL_COLUMNS])
 
         text = str(self.data.iloc[idx]['message'])
         encoding = self.tokenizer(

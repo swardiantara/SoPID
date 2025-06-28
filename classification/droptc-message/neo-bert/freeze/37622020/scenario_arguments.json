@@ -1,0 +1,14 @@
+{
+    "feature_col": "message",
+    "output_dir": "droptc-message",
+    "embedding": "neo-bert",
+    "n_epochs": 15,
+    "batch_size": 8,
+    "seed": 37622020,
+    "freeze_embedding": true,
+    "device": "cuda",
+    "scenario_dir": "droptc-message/neo-bert/freeze/37622020",
+    "best_epoch": 9,
+    "best_val_f1": 0.5599895670318206,
+    "best_val_acc": 0.452991452991453
+}

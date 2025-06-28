@@ -164,18 +164,22 @@ def main():
         model.eval()
         val_epoch_labels = []
         val_epoch_preds = []
+        total_val_loss
         with torch.no_grad():
             for batch in test_loader:
                 input_ids = batch["input_ids"].to(device)
                 attention_mask = batch["attention_mask"].to(device)
-                labels = batch["labels"].cpu().numpy()
+                labels = batch["labels"].to(device)
 
                 outputs = model(input_ids, attention_mask)
+                loss = criterion(outputs, labels)
+                total_val_loss += loss.item()
 
                 preds = [[1 if logit >= 0.5 else 0 for logit in logits] for logits in torch.sigmoid(outputs)]
-                assert len(labels) == len(preds), f'labels: {len(labels)}, preds: {len(preds)}'
                 val_epoch_preds.extend(preds)
-                val_epoch_labels.extend(labels)
+                val_epoch_labels.extend(labels.cpu().numpy())
+            val_loss_epoch = total_val_loss / len(test_loader)
+        print(f"{epoch+1}/{num_epochs}: val_loss: {val_loss_epoch}/{total_val_loss}")
         assert len(val_epoch_labels) == len(val_epoch_preds), f'labels: {len(val_epoch_labels)}, preds: {len(val_epoch_preds)}'
         val_acc_epoch = accuracy_score(val_epoch_labels, val_epoch_preds)
         val_f1 = f1_score(val_epoch_labels, val_epoch_preds, average='weighted')

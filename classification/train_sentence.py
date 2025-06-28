@@ -110,7 +110,7 @@ def main():
 
     # prepare output directory
     freeze = 'freeze' if args.freeze_embedding else 'unfreeze'
-    workdir = os.path.join(args.output_dir, args.embedding, freeze, str(args.seed))
+    workdir = os.path.join(args.output_dir, args.feature_col, args.embedding, freeze, str(args.seed))
     print(f'current scenario: {workdir}')
     os.makedirs(workdir, exist_ok=True)
 
@@ -172,19 +172,23 @@ def main():
         model.eval()
         val_epoch_labels = []
         val_epoch_preds = []
+        total_val_loss = 0.0
         with torch.no_grad():
             for batch in test_loader:
                 input_ids = batch["input_ids"].to(device)
                 attention_mask = batch["attention_mask"].to(device)
-                labels = batch["labelidx"]
+                labels = batch["label"].to(device)
 
                 logits = model(input_ids, attention_mask)
+                loss = criterion(logits, labels)
+                total_val_loss += loss.item()
 
                 pred_probs = torch.softmax(logits, axis=1)
                 pred_label = torch.argmax(pred_probs, axis=1).cpu().numpy()
-                val_epoch_labels.extend(labels)
+                val_epoch_labels.extend(labels.cpu().numpy())
                 val_epoch_preds.extend(pred_label)
-
+            val_loss_epoch = total_val_loss / len(test_loader)
+        print(f"{epoch+1}/{num_epochs}: val_loss: {val_loss_epoch}/{total_val_loss}")
         val_acc_epoch = accuracy_score(val_epoch_labels, val_epoch_preds)
         precision, recall, val_f1, _ = precision_recall_fscore_support(val_epoch_labels, val_epoch_preds, average='weighted')
 

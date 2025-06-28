@@ -1,0 +1,13 @@
+                        precision    recall  f1-score   support
+
+    CommunicationIssue    1.00000   1.00000   1.00000         3
+         HardwareFault    0.83333   0.89286   0.86207        28
+                Normal    0.94737   0.95455   0.95094       132
+        ParamViolation    0.72727   0.80000   0.76190        10
+   RegulationViolation    1.00000   1.00000   1.00000         3
+         SoftwareFault    0.70000   0.70000   0.70000        20
+SurroundingEnvironment    1.00000   0.69231   0.81818        13
+
+              accuracy                        0.89952       209
+             macro avg    0.88685   0.86282   0.87044       209
+          weighted avg    0.90267   0.89952   0.89913       209

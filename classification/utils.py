@@ -18,7 +18,7 @@ class SentenceDataset(Dataset):
 
     def __getitem__(self, index):
         text = self.data.iloc[index]['sentence']
-        label = self.data.iloc[index]["labelidx"]
+        label = self.data.iloc[index]["label"]
 
         encoding = self.tokenizer(
             text,

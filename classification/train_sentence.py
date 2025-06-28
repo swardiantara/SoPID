@@ -20,52 +20,52 @@ parser = argparse.ArgumentParser(description="Problem type classification")
 
 raw2pro = {
     'normal': 'Normal',
-    'HwFlt': 'HardwareFault',
-    'Swflt': 'SoftwareFault',
     'SurEnv': 'SurroundingEnvironment',
+    'HwFlt': 'HardwareFault',
     'ConfIss': 'ParamViolation',
+    'VioReg': 'RegulationViolation',
     'CommIss': "CommunicationIssue",
-    'VioReg': 'RegulationViolation'
+    'Swflt': 'SoftwareFault',
 }
 
 idx2pro = {
     0: 'Normal',
-    1: 'HardwareFault',
-    2: 'SoftwareFault',
-    3: 'SurroundingEnvironment',
-    4: 'ParamViolation',
+    1: 'SurroundingEnvironment',
+    2: 'HardwareFault',
+    3: 'ParamViolation',
+    4: 'RegulationViolation',
     5: "CommunicationIssue",
-    6: 'RegulationViolation'
+    6: 'SoftwareFault'
 }
 
 pro2idx = {
     'Normal': 0,
-    'HardwareFault': 1,
-    'SoftwareFault': 2,
-    'SurroundingEnvironment': 3,
-    'ParamViolation': 4,
+    'SurroundingEnvironment': 1,
+    'HardwareFault': 2,
+    'ParamViolation': 3,
+    'RegulationViolation': 4,
     'CommunicationIssue': 5,
-    'RegulationViolation': 6
+    'SoftwareFault': 6
 }
 
 slabel2idx = {
     'normal': 0,
-    'HwFlt': 1,
-    'Swflt': 2,
-    'SurEnv': 3,
-    'ConfIss': 4,
+    'SurEnv': 1,
+    'HwFlt': 2,
+    'ConfIss': 3,
+    'VioReg': 4,
     'CommIss': 5,
-    'VioReg': 6
+    'Swflt': 6,
 }
 
 sidx2label = {
     0: 'normal',
-    1: 'HwFlt',
-    2: 'Swflt',
-    3: 'SurEnv',
-    4: 'ConfIss',
+    1: 'SurEnv',
+    2: 'HwFlt',
+    3: 'ConfIss',
+    4: 'VioReg',
     5: 'CommIss',
-    6: 'VioReg'
+    6: 'Swflt'
 }
 
 def get_args():

@@ -218,7 +218,7 @@ def main():
     prediction_df['label_name'] = test_df['labels']
     prediction_df["labelidx"] = test_df['labelidx']
     prediction_df["predidx"] = list(preds_decoded)
-    prediction_df['pred_name'] = test_df['predidx'].map(class_mapper)
+    prediction_df['pred_name'] = prediction_df['predidx'].map(class_mapper)
     prediction_df.to_excel(os.path.join(workdir, "prediction.xlsx"), index=False)
 
     accuracy = accuracy_score(tests_decoded, preds_decoded)

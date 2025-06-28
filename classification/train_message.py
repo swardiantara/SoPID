@@ -49,7 +49,7 @@ def get_args():
     parser = argparse.ArgumentParser()
     # Required arguments
     parser.add_argument("--feature_col", required=True, default="sentence", help="Level of analysis")
-    parser.add_argument('--output_dir', type=str, default='droptc-message',
+    parser.add_argument('--output_dir', type=str, default='droptc',
                         help="Folder to store the experimental results. Default: droptc")
     parser.add_argument('--embedding', type=str, choices=['bert-base-uncased', 'neo-bert', 'modern-bert', 'all-MiniLM-L6-v2', 'all-MiniLM-L12-v2', 'all-mpnet-base-v2', 'all-distilroberta-v1', 'drone-sbert'], default='bert-base-uncased', help='Type of Word Embdding used. Default: bert-base-uncased')
     parser.add_argument('--n_epochs', type=int, default=15,
@@ -99,7 +99,7 @@ def main():
 
     # prepare output directory
     freeze = 'freeze' if args.freeze_embedding else 'unfreeze'
-    workdir = os.path.join(args.output_dir, args.embedding, freeze, str(args.seed))
+    workdir = os.path.join(args.output_dir, args.feature_col, args.embedding, freeze, str(args.seed))
     print(f'current scenario: {workdir}')
     os.makedirs(workdir, exist_ok=True)
 
@@ -235,7 +235,7 @@ def main():
         "recall": micro_rec,
         "f1-score": micro_f1
         }
-
+    classification_report_result['accuracy'] = accuracy
     # Logs the evaluation results into files
     with open(os.path.join(workdir, "evaluation_report.json"), 'w') as json_file:
         json.dump(classification_report_result, json_file, indent=4)

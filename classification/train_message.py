@@ -164,7 +164,7 @@ def main():
         model.eval()
         val_epoch_labels = []
         val_epoch_preds = []
-        total_val_loss
+        total_val_loss = 0.0
         with torch.no_grad():
             for batch in test_loader:
                 input_ids = batch["input_ids"].to(device)

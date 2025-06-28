@@ -1,0 +1,14 @@
+{
+    "feature_col": "message",
+    "output_dir": "droptc-message",
+    "embedding": "modern-bert",
+    "n_epochs": 15,
+    "batch_size": 8,
+    "seed": 87212562,
+    "freeze_embedding": true,
+    "device": "cuda",
+    "scenario_dir": "droptc-message/modern-bert/freeze/87212562",
+    "best_epoch": 1,
+    "best_val_f1": 0.6114308188237196,
+    "best_val_acc": 0.2222222222222222
+}

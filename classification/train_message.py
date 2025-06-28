@@ -104,7 +104,6 @@ def main():
     os.makedirs(workdir, exist_ok=True)
 
     train_df = pd.read_excel(os.path.join('dataset', f'train_{args.feature_col}.xlsx'))
-
     train_df["labels"] = train_df['labels'].apply(literal_eval)
     train_df['labels'] = train_df['labels'].apply(lambda x: [raw2pro.get(item, item) for item in x])
     train_df['labelidx'] = train_df['labels'].map(label_mapper)
@@ -169,7 +168,7 @@ def main():
             for batch in test_loader:
                 input_ids = batch["input_ids"].to(device)
                 attention_mask = batch["attention_mask"].to(device)
-                labels = batch["labelidx"]
+                labels = batch["labels"].cpu().numpy()
 
                 outputs = model(input_ids, attention_mask)
 
@@ -200,7 +199,7 @@ def main():
         for batch in tqdm(test_loader, desc="Evaluation..."):
             input_ids = batch["input_ids"].to(device)
             attention_mask = batch["attention_mask"].to(device)
-            labels = batch["labelidx"]
+            labels = batch["labels"].cpu().numpy()
 
             outputs = model(input_ids, attention_mask)
             preds = [[1 if logit >= 0.5 else 0 for logit in logits] for logits in torch.sigmoid(outputs)]

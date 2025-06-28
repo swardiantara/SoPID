@@ -49,7 +49,7 @@ def get_args():
     parser = argparse.ArgumentParser()
     # Required arguments
     parser.add_argument("--feature_col", required=True, default="sentence", help="Level of analysis")
-    parser.add_argument('--output_dir', type=str, default='droptc',
+    parser.add_argument('--output_dir', type=str, default='droptc-message',
                         help="Folder to store the experimental results. Default: droptc")
     parser.add_argument('--embedding', type=str, choices=['bert-base-uncased', 'neo-bert', 'modern-bert', 'all-MiniLM-L6-v2', 'all-MiniLM-L12-v2', 'all-mpnet-base-v2', 'all-distilroberta-v1', 'drone-sbert'], default='bert-base-uncased', help='Type of Word Embdding used. Default: bert-base-uncased')
     parser.add_argument('--n_epochs', type=int, default=15,

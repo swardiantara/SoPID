@@ -224,7 +224,7 @@ def main():
     accuracy = accuracy_score(tests_decoded, preds_decoded)
     f1_weighted = f1_score(tests_decoded, preds_decoded, average='weighted')
     evaluation_report = classification_report(
-        prediction_df['label_name'].to_list(), prediction_df['pred_name'].to_list(), digits=5)
+        tests_decoded, preds_decoded, digits=5)
     classification_report_result = classification_report(
         tests_decoded, preds_decoded, digits=5, output_dict=True)
     classification_report_result['macro_avg'] = classification_report_result.pop('macro avg')
@@ -258,7 +258,7 @@ def main():
     
     # generate a confusion matrix visualization to ease analysis
     class_names = [value for _, value in raw2pro.items()]
-    cms = multilabel_confusion_matrix(prediction_df['labelidx'].to_list(), prediction_df['predidx'].to_list(), labels=class_names)
+    cms = multilabel_confusion_matrix(prediction_df['labelidx'].to_list(), prediction_df['predidx'].to_list())
     for i, matrix in enumerate(cms):
         plt.figure(figsize=(4, 3.5))
         sns.heatmap(matrix, annot=True, fmt='d', cmap='YlGnBu', cbar=False, square=False)

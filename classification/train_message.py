@@ -14,7 +14,7 @@ from tqdm import tqdm
 from ast import literal_eval
 from torch.utils.data import DataLoader
 from transformers import AutoModel, AutoTokenizer
-from sklearn.metrics import accuracy_score, precision_recall_fscore_support, classification_report, confusion_matrix, f1_score
+from sklearn.metrics import accuracy_score, precision_recall_fscore_support, classification_report, confusion_matrix, f1_score, multilabel_confusion_matrix
 from sklearn.preprocessing import MultiLabelBinarizer
 
 from utils import MessageDataset, visualize_projection
@@ -258,13 +258,15 @@ def main():
     
     # generate a confusion matrix visualization to ease analysis
     class_names = [value for _, value in raw2pro.items()]
-    conf_matrix = confusion_matrix(prediction_df['label_name'].to_list(), prediction_df['pred_name'].to_list(), labels=class_names)
-    plt.figure(figsize=(4, 3.5))
-    sns.heatmap(conf_matrix, annot=True, xticklabels=class_names, yticklabels=class_names, fmt='d', cmap='YlGnBu', cbar=False, square=False)
-    plt.xlabel('Predicted labels')
-    plt.ylabel('True labels')
-    plt.savefig(os.path.join(workdir, "confusion_matrix.pdf"), bbox_inches='tight')
-    plt.close()
+    cms = multilabel_confusion_matrix(prediction_df['label_name'].to_list(), prediction_df['pred_name'].to_list(), labels=class_names)
+    for i, matrix in enumerate(cms):
+        plt.figure(figsize=(4, 3.5))
+        sns.heatmap(matrix, annot=True, fmt='d', cmap='YlGnBu', cbar=False, square=False)
+        plt.xlabel('Predicted labels')
+        plt.ylabel('True labels')
+        plt.title(f'{class_names[i]}')
+        plt.savefig(os.path.join(workdir, f"confusion_matrix_{class_names[i]}.pdf"), bbox_inches='tight')
+        plt.close()
 
     # Save the model's hidden state to a 2D plot
     # visualize_projection(merged_loader, idx2pro, best_model.to(device), device, workdir)

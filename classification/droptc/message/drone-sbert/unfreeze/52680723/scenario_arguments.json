@@ -2,13 +2,13 @@
     "feature_col": "message",
     "output_dir": "droptc",
     "embedding": "drone-sbert",
-    "n_epochs": 15,
+    "n_epochs": 100,
     "batch_size": 8,
     "seed": 52680723,
     "freeze_embedding": false,
     "device": "cuda",
     "scenario_dir": "droptc/message/drone-sbert/unfreeze/52680723",
-    "best_epoch": 14,
-    "best_val_f1": 0.8972430571892824,
-    "best_val_acc": 0.7777777777777778
+    "best_epoch": 76,
+    "best_val_f1": 0.9373890304946014,
+    "best_val_acc": 0.8632478632478633
 }

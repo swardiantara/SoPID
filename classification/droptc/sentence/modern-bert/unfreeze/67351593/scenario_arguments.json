@@ -2,13 +2,13 @@
     "feature_col": "sentence",
     "output_dir": "droptc",
     "embedding": "modern-bert",
-    "n_epochs": 15,
+    "n_epochs": 100,
     "batch_size": 8,
     "seed": 67351593,
     "freeze_embedding": false,
     "device": "cuda",
-    "scenario_dir": "droptc/modern-bert/unfreeze/67351593",
-    "best_epoch": 14,
-    "best_val_f1": 0.9061499021064908,
-    "best_val_acc": 0.9090909090909091
+    "scenario_dir": "droptc/sentence/modern-bert/unfreeze/67351593",
+    "best_epoch": 68,
+    "best_val_f1": 0.8989870989053129,
+    "best_val_acc": 0.8995215311004785
 }

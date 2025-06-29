@@ -2,13 +2,13 @@
     "feature_col": "sentence",
     "output_dir": "droptc",
     "embedding": "drone-sbert",
-    "n_epochs": 15,
+    "n_epochs": 100,
     "batch_size": 8,
     "seed": 24677315,
     "freeze_embedding": true,
     "device": "cuda",
-    "scenario_dir": "droptc/drone-sbert/freeze/24677315",
-    "best_epoch": 7,
-    "best_val_f1": 0.9103056454379622,
-    "best_val_acc": 0.9090909090909091
+    "scenario_dir": "droptc/sentence/drone-sbert/freeze/24677315",
+    "best_epoch": 16,
+    "best_val_f1": 0.9063101892165828,
+    "best_val_acc": 0.9043062200956937
 }

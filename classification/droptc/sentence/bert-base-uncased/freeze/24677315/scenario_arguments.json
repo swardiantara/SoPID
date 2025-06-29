@@ -2,13 +2,13 @@
     "feature_col": "sentence",
     "output_dir": "droptc",
     "embedding": "bert-base-uncased",
-    "n_epochs": 15,
+    "n_epochs": 100,
     "batch_size": 8,
     "seed": 24677315,
     "freeze_embedding": true,
     "device": "cuda",
-    "scenario_dir": "droptc/bert-base-uncased/freeze/24677315",
-    "best_epoch": 14,
-    "best_val_f1": 0.5800220831799778,
-    "best_val_acc": 0.6842105263157895
+    "scenario_dir": "droptc/sentence/bert-base-uncased/freeze/24677315",
+    "best_epoch": 100,
+    "best_val_f1": 0.8565277482214733,
+    "best_val_acc": 0.861244019138756
 }

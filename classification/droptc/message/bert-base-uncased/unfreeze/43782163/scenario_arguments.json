@@ -2,13 +2,13 @@
     "feature_col": "message",
     "output_dir": "droptc",
     "embedding": "bert-base-uncased",
-    "n_epochs": 15,
+    "n_epochs": 100,
     "batch_size": 8,
     "seed": 43782163,
     "freeze_embedding": false,
     "device": "cuda",
     "scenario_dir": "droptc/message/bert-base-uncased/unfreeze/43782163",
-    "best_epoch": 12,
-    "best_val_f1": 0.8953922343396027,
-    "best_val_acc": 0.7948717948717948
+    "best_epoch": 27,
+    "best_val_f1": 0.9020647295827633,
+    "best_val_acc": 0.8034188034188035
 }

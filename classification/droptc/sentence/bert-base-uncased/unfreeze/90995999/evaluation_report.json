@@ -6,21 +6,21 @@
         "support": 3.0
     },
     "HardwareFault": {
-        "precision": 0.8709677419354839,
+        "precision": 0.8181818181818182,
         "recall": 0.9642857142857143,
-        "f1-score": 0.9152542372881356,
+        "f1-score": 0.8852459016393442,
         "support": 28.0
     },
     "Normal": {
-        "precision": 0.9701492537313433,
-        "recall": 0.9848484848484849,
-        "f1-score": 0.9774436090225563,
+        "precision": 0.9699248120300752,
+        "recall": 0.9772727272727273,
+        "f1-score": 0.9735849056603774,
         "support": 132.0
     },
     "ParamViolation": {
-        "precision": 0.8571428571428571,
-        "recall": 0.6,
-        "f1-score": 0.7058823529411765,
+        "precision": 0.8,
+        "recall": 0.8,
+        "f1-score": 0.8,
         "support": 10.0
     },
     "RegulationViolation": {
@@ -30,28 +30,28 @@
         "support": 3.0
     },
     "SoftwareFault": {
-        "precision": 0.7142857142857143,
-        "recall": 0.75,
-        "f1-score": 0.7317073170731707,
+        "precision": 0.7777777777777778,
+        "recall": 0.7,
+        "f1-score": 0.7368421052631579,
         "support": 20.0
     },
     "SurroundingEnvironment": {
-        "precision": 0.9,
+        "precision": 1.0,
         "recall": 0.6923076923076923,
-        "f1-score": 0.782608695652174,
+        "f1-score": 0.8181818181818182,
         "support": 13.0
     },
     "accuracy": 0.9234449760765551,
     "macro_avg": {
-        "precision": 0.9017922238707713,
-        "recall": 0.8559202702059846,
-        "f1-score": 0.8732708874253161,
+        "precision": 0.9094120582842387,
+        "recall": 0.8762665905523049,
+        "f1-score": 0.8876935329635282,
         "support": 209.0
     },
     "weighted_avg": {
-        "precision": 0.9234638331285824,
+        "precision": 0.9258120653235232,
         "recall": 0.9234449760765551,
-        "f1-score": 0.9211318562172184,
+        "f1-score": 0.9218818111708048,
         "support": 209.0
     },
     "micro_avg": {

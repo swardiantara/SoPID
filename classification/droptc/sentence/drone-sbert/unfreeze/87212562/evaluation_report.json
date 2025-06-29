@@ -6,9 +6,9 @@
         "support": 3.0
     },
     "HardwareFault": {
-        "precision": 0.84375,
-        "recall": 0.9642857142857143,
-        "f1-score": 0.9,
+        "precision": 0.9032258064516129,
+        "recall": 1.0,
+        "f1-score": 0.9491525423728814,
         "support": 28.0
     },
     "Normal": {
@@ -18,9 +18,9 @@
         "support": 132.0
     },
     "ParamViolation": {
-        "precision": 0.6923076923076923,
-        "recall": 0.9,
-        "f1-score": 0.782608695652174,
+        "precision": 0.625,
+        "recall": 1.0,
+        "f1-score": 0.7692307692307693,
         "support": 10.0
     },
     "RegulationViolation": {
@@ -30,9 +30,9 @@
         "support": 3.0
     },
     "SoftwareFault": {
-        "precision": 0.7142857142857143,
-        "recall": 0.75,
-        "f1-score": 0.7317073170731707,
+        "precision": 0.8421052631578947,
+        "recall": 0.8,
+        "f1-score": 0.8205128205128205,
         "support": 20.0
     },
     "SurroundingEnvironment": {
@@ -41,22 +41,22 @@
         "f1-score": 0.8181818181818182,
         "support": 13.0
     },
-    "accuracy": 0.9138755980861244,
+    "accuracy": 0.9282296650717703,
     "macro_avg": {
-        "precision": 0.889557986656201,
-        "recall": 0.893366157651872,
-        "f1-score": 0.8848623274922321,
+        "precision": 0.9066990813727868,
+        "recall": 0.9198967698967699,
+        "f1-score": 0.9026594874052501,
         "support": 209.0
     },
     "weighted_avg": {
-        "precision": 0.9222011541090489,
-        "recall": 0.9138755980861244,
-        "f1-score": 0.9149266691742857,
+        "precision": 0.9391802767646079,
+        "recall": 0.9282296650717703,
+        "f1-score": 0.9293697409016523,
         "support": 209.0
     },
     "micro_avg": {
-        "precision": 0.9138755980861244,
-        "recall": 0.9138755980861244,
-        "f1-score": 0.9138755980861244
+        "precision": 0.9282296650717703,
+        "recall": 0.9282296650717703,
+        "f1-score": 0.9282296650717703
     }
 }

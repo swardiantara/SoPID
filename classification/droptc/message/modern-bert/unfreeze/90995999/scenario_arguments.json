@@ -2,13 +2,13 @@
     "feature_col": "message",
     "output_dir": "droptc",
     "embedding": "modern-bert",
-    "n_epochs": 15,
+    "n_epochs": 100,
     "batch_size": 8,
     "seed": 90995999,
     "freeze_embedding": false,
     "device": "cuda",
     "scenario_dir": "droptc/message/modern-bert/unfreeze/90995999",
-    "best_epoch": 8,
-    "best_val_f1": 0.841662187427226,
-    "best_val_acc": 0.717948717948718
+    "best_epoch": 60,
+    "best_val_f1": 0.8873630647851638,
+    "best_val_acc": 0.7435897435897436
 }

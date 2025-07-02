@@ -241,10 +241,10 @@ def main():
     print("Test set loaded successfully...")
 
     print("Start interpreting...")
-    attribution_dict = list[dict]
+    attribution_list = []
     for index, row in test_set.iterrows():
         attributions, tokens, label, pred_label, pred_prob = interpret(model, tokenizer, max_seq_length, row[args.feature_col], row['label'])
-        attribution_dict.append({
+        attribution_list.append({
             "index": index + 1,
             "words": tokens,
             "attributions": attributions,
@@ -256,7 +256,7 @@ def main():
     with open(os.path.join(workdir, f'word_importance_{args.feature_col}.html'), 'w') as f:
         f.write(html_output.data)
     with open(os.path.join(workdir, f"attributions_{args.feature_col}.json"), "w", encoding="utf-8") as f:
-        json.dump(attribution_dict, f, indent=2, ensure_ascii=False)
+        json.dump(attribution_list, f, indent=2, ensure_ascii=False)
 
     if name == 'nt':
         path_to_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'

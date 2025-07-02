@@ -43,7 +43,6 @@ pro2idx = {
 }
 
 class_order = [value for _, value in raw2pro.items()]
-# Normal	SurroundingEnvironment	HardwareFault	ParamViolation	RegulationViolation	CommunicationIssue	SoftwareFault
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -60,6 +59,9 @@ def get_args():
                         help='Random seed for reproducibility')
     parser.add_argument('--freeze_embedding', action='store_true',
                         help="Wether to freeze the pre-trained embedding's parameter.")
+    parser.add_argument('--save_model', action='store_true',
+                        help="Wether to save model.")
+    
     
     args = parser.parse_args()
     return args
@@ -275,7 +277,8 @@ def main():
     # Save the model's hidden state to a 2D plot
     # visualize_projection(merged_loader, idx2pro, best_model.to(device), device, workdir)
     # Save the model
-    # torch.save(best_model_state, os.path.join(workdir, 'sentence_pytorch_model.pt'))
+    if args.save_model:
+        torch.save(best_model_state, os.path.join(workdir, 'message_pytorch_model.pt'))
 
     return exit(0)
 

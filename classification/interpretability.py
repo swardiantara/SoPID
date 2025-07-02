@@ -10,6 +10,7 @@ import torch
 import numpy as np
 import pandas as pd
 
+from typing import Tuple
 from os import name
 from model import ProblemClassifier
 
@@ -102,7 +103,7 @@ def reconstruct_tokens(tokens, attributions):
     return words, attribution_score
 
 
-def infer_pred(model, input_ids, attention_mask):
+def infer_pred(model, input_ids, attention_mask)-> Tuple[str, float]:
     model.eval()
     with torch.no_grad():
         logits = model(input_ids, attention_mask)
@@ -182,6 +183,16 @@ def interpret(model: ProblemClassifier, tokenizer: AutoTokenizer, max_seq_length
     return attributions, tokens, label, pred_label, pred_prob
 
 
+def to_serializable(obj):
+    if isinstance(obj, (np.float32, np.float64, torch.Tensor)):
+        return float(obj)
+    if isinstance(obj, (np.int32, np.int64)):
+        return int(obj)
+    if isinstance(obj, (np.ndarray,)):
+        return obj.tolist()
+    return obj
+
+
 def set_seed(seed: int = 42) -> None:
     np.random.seed(seed)
     random.seed(seed)
@@ -255,14 +266,14 @@ def main():
             "words": tokens,
             "attributions": attributions,
             "label": label,
-            "pred_label": idx2label.get(pred_label, 'Normal'),
+            "pred_label": pred_label,
             "pred_prob": pred_prob,
         })
     html_output = visualization.visualize_text(vis_data_records_ig)
     with open(os.path.join(workdir, f'word_importance_{args.feature_col}.html'), 'w') as f:
         f.write(html_output.data)
     with open(os.path.join(workdir, f"attributions_{args.feature_col}.json"), "w", encoding="utf-8") as f:
-        json.dump(attribution_list, f, indent=2, ensure_ascii=False)
+        json.dump(attribution_list, f, indent=2, ensure_ascii=False, default=to_serializable)
 
     if name == 'nt':
         path_to_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'

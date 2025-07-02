@@ -106,12 +106,18 @@ def infer_pred(model, input_ids, attention_mask):
     model.eval()
     with torch.no_grad():
         logits = model(input_ids, attention_mask)
-        if args.feature_col == 'sentence':
-            pred_prob = torch.softmax(logits, axis=1)
-            pred_label = torch.argmax(pred_prob, axis=1).cpu().numpy()[0]
-            # pred_label = idx2label.get(pred_label[0], 'Normal')
-            pred_prob = pred_prob.cpu().numpy()[0]
-    return pred_label, pred_prob
+        pred_prob = torch.softmax(logits, dim=1)  # 'dim' is preferred over 'axis' in PyTorch
+
+        # Get predicted class index (int)
+        pred_idx = torch.argmax(pred_prob, dim=1).item()
+
+        # Convert class index to label
+        pred_label = idx2label.get(pred_idx, 'Normal')
+
+        # Get predicted probability value (float)
+        pred_prob_val = pred_prob[0, pred_idx].item()
+
+    return pred_label, pred_prob_val  # (str, float)
 
 
 def scale_attribution(distribution):
@@ -135,14 +141,14 @@ def add_attributions_to_visualizer(attributions, text, pred, pred_ind, label, de
     attributions = np.array(attributions)
     # storing couple samples in an array for visualization purposes
     vis_data_records.append(visualization.VisualizationDataRecord(
-                            attributions,
-                            pred,
-                            pred_ind,
-                            label, # true label
-                            label, # attribution label
-                            attributions.sum(),
-                            text,
-                            delta))
+                            word_attributions=attributions,
+                            pred_prob=pred,
+                            pred_class=pred_ind,
+                            true_class=label, # true label
+                            attr_class=label, # attribution label
+                            attr_score=attributions.sum(),
+                            raw_input_ids=text,
+                            convergence_score=delta))
 
 
 vis_data_records_ig = []

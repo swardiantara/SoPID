@@ -108,8 +108,8 @@ def infer_pred(model, input_ids, attention_mask):
         logits = model(input_ids, attention_mask)
         if args.feature_col == 'sentence':
             pred_prob = torch.softmax(logits, axis=1)
-            pred_label = torch.argmax(pred_prob, axis=1).cpu().numpy()
-            pred_label = idx2label.get(pred_label[0], 'Normal')
+            pred_label = torch.argmax(pred_prob, axis=1).cpu().numpy()[0]
+            # pred_label = idx2label.get(pred_label[0], 'Normal')
             pred_prob = pred_prob.cpu().numpy()[0]
     return pred_label, pred_prob
 
@@ -249,7 +249,7 @@ def main():
             "words": tokens,
             "attributions": attributions,
             "label": label,
-            "pred_label": pred_label,
+            "pred_label": idx2label.get(pred_label, 'Normal'),
             "pred_prob": pred_prob,
         })
     html_output = visualization.visualize_text(vis_data_records_ig)

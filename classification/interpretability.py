@@ -181,10 +181,10 @@ def get_embedding_layer(model):
             raise AttributeError("Could not find a common embedding layer. Please inspect the model structure.")
 
 
-def add_attributions_to_visualizer(attributions, text, pred, pred_ind, label, delta, vis_data_records):
+def add_attributions_to_visualizer(attributions, text, pred, pred_ind, label, delta):
     attributions = np.array(attributions)
     # storing couple samples in an array for visualization purposes
-    vis_data_records.append(visualization.VisualizationDataRecord(
+    return visualization.VisualizationDataRecord(
                             word_attributions=attributions,
                             pred_prob=pred,
                             pred_class=pred_ind,
@@ -192,58 +192,7 @@ def add_attributions_to_visualizer(attributions, text, pred, pred_ind, label, de
                             attr_class=label, # attribution label
                             attr_score=attributions.sum(),
                             raw_input_ids=text,
-                            convergence_score=delta))
-
-
-vis_data_records_ig = []
-def interpret(model: ProblemClassifier, tokenizer: AutoTokenizer, max_seq_length: int, text: str, label: str):
-    model.eval()
-
-    labelidx = label2idx.get(label)
-    # Tokenize the input text
-    inputs = tokenizer(text, return_tensors='pt', padding=True, truncation=True, max_length=max_seq_length)
-    input_ids = inputs['input_ids'].to(device)
-    attention_mask = inputs['attention_mask'].to(device)
-
-    try:
-        embedding_layer = get_embedding_layer(model.embedding_model)
-        print(f"Identified embedding layer: {embedding_layer}")
-
-        # Instantiate LayerIntegratedGradients
-        lig = LayerIntegratedGradients(model, embedding_layer)
-        print("LayerIntegratedGradients instantiated successfully!")
-
-        # You can also get the original model identifier from the base_model's config
-        # if hasattr(model.embedding_model, 'config') and hasattr(model.embedding_model.config, 'name_or_path'):
-        #     original_loaded_path = model.embedding_model.config.name_or_path
-        #     print(f"Model was originally loaded from: {original_loaded_path}")
-
-    except AttributeError as e:
-        print(f"Error finding embedding layer: {e}")
-        print("Please inspect your model structure carefully using print(your_model_instance)")
-
-    # if model.embedding_model.__class__.__name__ == 'NeoBERT':
-    #     lig = LayerIntegratedGradients(model, model.embedding_model.encoder)
-    # else:
-    #     lig = LayerIntegratedGradients(model, model.embedding_model.embeddings)
-    pred_label, pred_prob = infer_pred(model, input_ids, attention_mask)
-
-    attributions, delta = lig.attribute(inputs=input_ids, 
-                                        baselines=input_ids*0, 
-                                        additional_forward_args=(attention_mask,),
-                                        target=labelidx,
-                                        return_convergence_delta=True)
-    # Sum the attributions across embedding dimensions
-    attributions = attributions.sum(dim=-1).squeeze(0)
-    attributions = attributions / torch.norm(attributions)
-    # Convert attributions to numpy
-    attributions = attributions.cpu().detach().numpy()
-
-    # Get the tokens
-    tokens = tokenizer.convert_ids_to_tokens(input_ids[0])
-    tokens, attributions = reconstruct_tokens(tokens, attributions)
-    add_attributions_to_visualizer(attributions, tokens, pred_prob, pred_label, label, delta, vis_data_records_ig)
-    return attributions, tokens, label, pred_label, pred_prob
+                            convergence_score=delta)
 
 
 def to_serializable(obj):
@@ -319,11 +268,52 @@ def main():
     test_set["label"] = test_set['problem_type'].map(raw2pro)
 
     print("Test set loaded successfully...")
+    try:
+        embedding_layer = get_embedding_layer(model.embedding_model)
+        print(f"Identified embedding layer: {embedding_layer}")
+
+        # Instantiate LayerIntegratedGradients
+        lig = LayerIntegratedGradients(model, embedding_layer)
+        print("LayerIntegratedGradients instantiated successfully!")
+
+        # You can also get the original model identifier from the base_model's config
+        # if hasattr(model.embedding_model, 'config') and hasattr(model.embedding_model.config, 'name_or_path'):
+        #     original_loaded_path = model.embedding_model.config.name_or_path
+        #     print(f"Model was originally loaded from: {original_loaded_path}")
+
+    except AttributeError as e:
+        print(f"Error finding embedding layer: {e}")
+        print("Please inspect your model structure carefully using print(your_model_instance)")
 
     print("Start interpreting...")
+    vis_data_records_ig = []
     attribution_list = []
     for index, row in test_set.iterrows():
-        attributions, tokens, label, pred_label, pred_prob = interpret(model, tokenizer, max_seq_length, row[args.feature_col], row['label'])
+        label = row['label']
+        labelidx = label2idx.get(label)
+        # Tokenize the input text
+        inputs = tokenizer(row[args.feature_col], return_tensors='pt', padding=True, truncation=True, max_length=max_seq_length)
+        input_ids = inputs['input_ids'].to(device)
+        attention_mask = inputs['attention_mask'].to(device)
+        pred_label, pred_prob = infer_pred(model, input_ids, attention_mask)
+
+        attributions, delta = lig.attribute(inputs=input_ids, 
+                                        baselines=input_ids*0, 
+                                        additional_forward_args=(attention_mask,),
+                                        target=labelidx,
+                                        return_convergence_delta=True)
+        # Sum the attributions across embedding dimensions
+        attributions = attributions.sum(dim=-1).squeeze(0)
+        # attributions = attributions / torch.norm(attributions)
+        # Convert attributions to numpy
+        attributions = attributions.cpu().detach().numpy()
+
+        # Get the tokens
+        tokens = tokenizer.convert_ids_to_tokens(input_ids[0])
+        tokens, attributions = reconstruct_tokens(tokens, attributions)
+        visualizer = add_attributions_to_visualizer(attributions, tokens, pred_prob, pred_label, label, delta)
+        vis_data_records_ig.append(visualizer)
+        # attributions, tokens, label, pred_label, pred_prob = interpret(model, tokenizer, max_seq_length, row[args.feature_col], row['label'])
         attribution_list.append({
             "index": index + 1,
             "words": tokens,

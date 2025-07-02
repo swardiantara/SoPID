@@ -138,6 +138,49 @@ def scale_attribution(distribution):
     return scaled_distribution
 
 
+def get_embedding_layer(model):
+    """
+    Identifies and returns the embedding layer for a given Hugging Face model.
+    """
+    if hasattr(model, 'config') and hasattr(model.config, 'model_type'):
+        model_type = model.config.model_type
+        print(f"Detected model_type from config: {model_type}")
+
+        if model_type == "neobert":
+            # Based on your print(model) output for NeoBERT
+            return model.encoder
+        elif model_type == "bert":
+            # Standard BERT model
+            return model.embeddings
+        elif model_type == "minilm":
+            # For MiniLM, it often follows the BERT structure
+            return model.embeddings
+        elif model_type == "modernbert":
+            # For MiniLM, it often follows the BERT structure
+            return model.embeddings
+        # Add more conditions for other model types if needed
+        # You would need to inspect the structure of each new model type
+        # using print(model) to find the correct path.
+        else:
+            print(f"Warning: Model type '{model_type}' not explicitly handled for embedding layer. Attempting common paths.")
+            # Fallback for other common architectures
+            if hasattr(model, 'embeddings'):
+                return model.embeddings
+            else:
+                raise AttributeError(f"Could not find a common embedding layer for model type: {model_type}")
+    else:
+        print("Warning: Model does not have a standard config.model_type. Attempting common paths based on inspection.")
+        # Fallback if config.model_type isn't available
+        if hasattr(model, 'encoder') and isinstance(model.encoder, torch.nn.Embedding):
+            return model.encoder
+        elif hasattr(model, 'bert') and hasattr(model.bert, 'embeddings'):
+            return model.bert.embeddings
+        elif hasattr(model, 'embeddings'):
+            return model.embeddings
+        else:
+            raise AttributeError("Could not find a common embedding layer. Please inspect the model structure.")
+
+
 def add_attributions_to_visualizer(attributions, text, pred, pred_ind, label, delta, vis_data_records):
     attributions = np.array(attributions)
     # storing couple samples in an array for visualization purposes
@@ -162,7 +205,27 @@ def interpret(model: ProblemClassifier, tokenizer: AutoTokenizer, max_seq_length
     input_ids = inputs['input_ids'].to(device)
     attention_mask = inputs['attention_mask'].to(device)
 
-    lig = LayerIntegratedGradients(model, model.embedding_model.embeddings)
+    try:
+        embedding_layer = get_embedding_layer(model.embedding_model)
+        print(f"Identified embedding layer: {embedding_layer}")
+
+        # Instantiate LayerIntegratedGradients
+        lig = LayerIntegratedGradients(model, embedding_layer)
+        print("LayerIntegratedGradients instantiated successfully!")
+
+        # You can also get the original model identifier from the base_model's config
+        # if hasattr(model.embedding_model, 'config') and hasattr(model.embedding_model.config, 'name_or_path'):
+        #     original_loaded_path = model.embedding_model.config.name_or_path
+        #     print(f"Model was originally loaded from: {original_loaded_path}")
+
+    except AttributeError as e:
+        print(f"Error finding embedding layer: {e}")
+        print("Please inspect your model structure carefully using print(your_model_instance)")
+
+    # if model.embedding_model.__class__.__name__ == 'NeoBERT':
+    #     lig = LayerIntegratedGradients(model, model.embedding_model.encoder)
+    # else:
+    #     lig = LayerIntegratedGradients(model, model.embedding_model.embeddings)
     pred_label, pred_prob = infer_pred(model, input_ids, attention_mask)
 
     attributions, delta = lig.attribute(inputs=input_ids, 

@@ -103,12 +103,14 @@ def reconstruct_tokens(tokens, attributions):
 
 
 def infer_pred(model, input_ids, attention_mask):
-    logits = model(input_ids, attention_mask)
-    if args.feature_col == 'sentence':
-        pred_prob = torch.softmax(logits, axis=1)
-        pred_label = torch.argmax(pred_prob, axis=1).cpu().numpy()
-        pred_label = idx2label.get(pred_label[0], 'Normal')
-        pred_prob = pred_prob.cpu().numpy()[0]
+    model.eval()
+    with torch.no_grad():
+        logits = model(input_ids, attention_mask)
+        if args.feature_col == 'sentence':
+            pred_prob = torch.softmax(logits, axis=1)
+            pred_label = torch.argmax(pred_prob, axis=1).cpu().numpy()
+            pred_label = idx2label.get(pred_label[0], 'Normal')
+            pred_prob = pred_prob.cpu().numpy()[0]
     return pred_label, pred_prob
 
 
@@ -150,8 +152,8 @@ def interpret(model: ProblemClassifier, tokenizer: AutoTokenizer, max_seq_length
     labelidx = label2idx.get(label)
     # Tokenize the input text
     inputs = tokenizer(text, return_tensors='pt', padding=True, truncation=True, max_length=max_seq_length)
-    input_ids = inputs['input_ids']
-    attention_mask = inputs['attention_mask']
+    input_ids = inputs['input_ids'].to(device)
+    attention_mask = inputs['attention_mask'].to(device)
 
     lig = LayerIntegratedGradients(model, model.embedding_model.embeddings)
     pred_label, pred_prob = infer_pred(model, input_ids, attention_mask)
@@ -187,11 +189,11 @@ def set_seed(seed: int = 42) -> None:
     # print(f"Random seed set as {seed}")
 
 args = get_args()
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 def main():
     # set global seed for reproducibility
     set_seed(args.seed)
     # set device (GPU if available, else CPU)
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # prepare output directory
     freeze = 'freeze' if args.freeze_embedding else 'unfreeze'

@@ -304,7 +304,7 @@ def main():
                                         return_convergence_delta=True)
         # Sum the attributions across embedding dimensions
         attributions = attributions.sum(dim=-1).squeeze(0)
-        # attributions = attributions / torch.norm(attributions)
+        attributions = attributions / torch.norm(attributions)
         # Convert attributions to numpy
         attributions = attributions.cpu().detach().numpy()
 

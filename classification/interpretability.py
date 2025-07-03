@@ -85,7 +85,7 @@ def reconstruct_roberta_tokens(tokens, attributions):
     attribution_score = []
     current_word = ""
     current_attr = 0
-    for idx, token, attribution in enumerate(zip(tokens, attributions)):
+    for idx, (token, attribution) in enumerate(zip(tokens, attributions)):
         if idx < 2:
             if current_word:
                 words.append(current_word)

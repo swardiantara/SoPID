@@ -106,6 +106,12 @@ def reconstruct_roberta_tokens(tokens, attributions):
             current_attr = attribution
         elif token == 'Ġ':
             continue # ignore this token
+        elif len(token) == 1: # punctuation
+            if current_word:
+                words.append(current_word)
+                attribution_score.append(current_attr)
+            current_word = token
+            current_attr = attribution
         else:
             current_word += token
             current_attr += attribution

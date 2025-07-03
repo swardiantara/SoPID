@@ -92,6 +92,12 @@ def reconstruct_roberta_tokens(tokens, attributions):
                 attribution_score.append(current_attr)
             current_word = token
             current_attr = attribution
+        elif idx == len(tokens) - 1:
+            if current_word:
+                words.append(current_word)
+                attribution_score.append(current_attr)
+            current_word = token
+            current_attr = attribution
         elif 'Ġ' in token and len(token) > 1: # beginning of new word
             if current_word:
                 words.append(current_word)

@@ -80,6 +80,42 @@ class2color = {
 }
 
 
+def reconstruct_roberta_tokens(tokens, attributions):
+    words = []
+    attribution_score = []
+    current_word = ""
+    current_attr = 0
+    for idx, token, attribution in enumerate(zip(tokens, attributions)):
+        if idx < 2:
+            if current_word:
+                words.append(current_word)
+                attribution_score.append(current_attr)
+            current_word = token
+            current_attr = attribution
+        elif 'Ġ' in token and len(token) > 1: # beginning of new word
+            if current_word:
+                words.append(current_word)
+                attribution_score.append(current_attr)
+            current_word = token[1:]
+            current_attr = attribution
+        elif token == 'Ġ':
+            continue # ignore this token
+        else:
+            current_word += token
+            current_attr += attribution
+            # if current_word:
+            #     words.append(current_word)
+            #     attribution_score.append(current_attr)
+            # current_word = token
+            # current_attr = attribution
+    # Append the last word
+    if current_word:
+        words.append(current_word)
+        attribution_score.append(current_attr)
+
+    return words, attribution_score
+
+
 def reconstruct_tokens(tokens, attributions):
     words = []
     attribution_score = []
@@ -310,7 +346,10 @@ def main():
 
         # Get the tokens
         tokens = tokenizer.convert_ids_to_tokens(input_ids[0])
-        tokens, attributions = reconstruct_tokens(tokens, attributions)
+        if args.embedding == 'modern-bert':
+            tokens, attributions = reconstruct_roberta_tokens(tokens, attributions)
+        else:      
+            tokens, attributions = reconstruct_tokens(tokens, attributions)
         visualizer = add_attributions_to_visualizer(attributions, tokens, pred_prob, pred_label, label, delta)
         vis_data_records_ig.append(visualizer)
         # attributions, tokens, label, pred_label, pred_prob = interpret(model, tokenizer, max_seq_length, row[args.feature_col], row['label'])

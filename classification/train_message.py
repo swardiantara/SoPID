@@ -117,12 +117,12 @@ def main():
     train_df = pd.read_excel(os.path.join('dataset', f'train_{args.feature_col}.xlsx'))
     train_df["label"] = train_df['labels'].apply(literal_eval)
     train_df['label_name'] = train_df['label'].apply(lambda x: [raw2pro.get(item, item) for item in x])
-    train_df['labelidx'] = train_df['label'].map(label_mapper)
+    train_df['labelidx'] = train_df['label_name'].map(label_mapper)
 
     test_df = pd.read_excel(os.path.join('dataset', f'test_{args.feature_col}.xlsx'))
     test_df["label"] = test_df['labels'].apply(literal_eval)
     test_df['label_name'] = test_df['label'].apply(lambda x: [raw2pro.get(item, item) for item in x])
-    test_df['labelidx'] = test_df['label'].map(label_mapper)
+    test_df['labelidx'] = test_df['label_name'].map(label_mapper)
     
     if args.embedding == 'drone-sbert':
         model_name_path = f"swardiantara/{args.feature_col}-problem_type-embedding"

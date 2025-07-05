@@ -13,8 +13,8 @@ from torch.utils.data import DataLoader
 from transformers import AutoModel, AutoTokenizer
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support, classification_report, confusion_matrix, f1_score
 
-from utils import SentenceDataset, visualize_sentence
-from model import ProblemClassifier
+from utils import SentenceDataset, visualize_sentence, interactive_plot
+from model import ProblemClassifier, BaselineModel
 
 parser = argparse.ArgumentParser(description="Problem type classification")
 
@@ -74,7 +74,10 @@ def get_args():
     parser.add_argument("--feature_col", required=True, default="sentence", help="Level of analysis")
     parser.add_argument('--output_dir', type=str, default='droptc',
                         help="Folder to store the experimental results. Default: droptc")
+    parser.add_argument('--encoder', type=str, choices=['transformer', 'lstm', 'gru', 'linear'], default='linear',
+                    help="Encoder Architecture used to perform computation. Default: linear.")
     parser.add_argument('--embedding', type=str, choices=['bert-base-uncased', 'neo-bert', 'modern-bert', 'all-MiniLM-L6-v2', 'all-MiniLM-L12-v2', 'all-mpnet-base-v2', 'all-distilroberta-v1', 'drone-sbert'], default='bert-base-uncased', help='Type of Word Embdding used. Default: bert-base-uncased')
+    parser.add_argument('--dim_reduce', type=str, choices=['tsne', 'pca-tsne', 'umap', 'pca', 'isomap'], default='pca-tsne', help='Dimensional reduction method. Default: `pca-tsne`')
     parser.add_argument('--n_epochs', type=int, default=15,
                         help='Number of testtraining iterations')
     parser.add_argument('--batch_size', type=int, default=8,
@@ -118,8 +121,10 @@ def main():
 
     train_df = pd.read_excel(os.path.join('dataset', f'train_{args.feature_col}.xlsx'))
     train_df["label"] = train_df['problem_type'].map(slabel2idx)
+    train_df["label_name"] = train_df['label'].map(idx2pro)
     test_df = pd.read_excel(os.path.join('dataset', f'test_{args.feature_col}.xlsx'))
     test_df["label"] = test_df['problem_type'].map(slabel2idx)
+    test_df["label_name"] = test_df['label'].map(idx2pro)
     
     if args.embedding == 'drone-sbert':
         model_name_path = f"swardiantara/{args.feature_col}-problem_type-embedding"
@@ -136,8 +141,8 @@ def main():
     max_seq_length = 64
     batch_size = args.batch_size
     num_epochs = args.n_epochs
-
-    merged_dataset = SentenceDataset(pd.concat([train_df, test_df]), tokenizer, max_seq_length)
+    merged_df = pd.concat([train_df, test_df])
+    merged_dataset = SentenceDataset(merged_df, tokenizer, max_seq_length)
     merged_loader = DataLoader(merged_dataset, batch_size=batch_size, shuffle=False)
     train_dataset = SentenceDataset(train_df, tokenizer, max_seq_length)
     test_dataset = SentenceDataset(test_df, tokenizer, max_seq_length)
@@ -284,6 +289,7 @@ def main():
 
     # Save the model's hidden state to a 2D plot
     visualize_sentence(merged_loader, idx2pro, best_model.to(device), device, workdir)
+    interactive_plot(merged_df, merged_loader, args.feature_col, 'label_name', model, device, args.dim_reduce, args.seed, workdir)
     # Save the model
     if args.save_model:
         torch.save(best_model_state, os.path.join(workdir, 'sentence_pytorch_model.pt'))

@@ -1,11 +1,17 @@
 import os
-
 import torch
+
 import pandas as pd
+import umap.umap_ as umap
+import plotly.express as px
 import matplotlib.pyplot as plt
+
+from tqdm import tqdm
 from sklearn.manifold import TSNE
 from torch.utils.data import Dataset
-from sklearn.preprocessing import MultiLabelBinarizer
+from sklearn.decomposition import PCA
+from sklearn.manifold import TSNE, Isomap
+
 
 class SentenceDataset(Dataset):
     def __init__(self, dataframe, tokenizer, max_length):
@@ -116,6 +122,67 @@ def visualize_sentence(dataset_loader, idx2label, model, device, output_dir):
     # Display the plot
     plt.savefig(os.path.join(output_dir, "dataset_viz.pdf"), bbox_inches='tight')
     plt.close()
+
+
+def reduce_dimension(embeddings, random_state, technique = 'pca-tsne'):
+    # PCA
+    if technique == 'pca':
+        pca = PCA(n_components=2, random_state=random_state)
+        reduced_emb = pca.fit_transform(embeddings)
+
+    # PCA and t-SNE
+    elif technique == 'pca-tsne':
+        pca = PCA(n_components=50, random_state=random_state)
+        reduced_pca = pca.fit_transform(embeddings)
+        tsne = TSNE(n_components=2, random_state=random_state, perplexity=30)
+        reduced_emb = tsne.fit_transform(reduced_pca)
+
+    # t-SNE
+    elif technique == 'tsne':
+        tsne = TSNE(n_components=2, random_state=random_state, perplexity=30)
+        reduced_emb = tsne.fit_transform(embeddings)
+
+    # UMAP
+    elif technique == 'umap':
+        reducer = umap.UMAP(n_components=2, random_state=random_state)
+        reduced_emb = reducer.fit_transform(embeddings)
+
+    # Isomap
+    elif technique == 'isomap':
+        isomap = Isomap(n_components=2)
+        reduced_emb = isomap.fit_transform(embeddings)
+
+    return reduced_emb
+
+
+def interactive_plot(dataframe: pd.DataFrame, dataset_loader, text_col, label_col, model, device, dim_reduce, random_state, out_dir):
+    filename = os.path.join(out_dir, f'interactive_plot_{text_col}_{dim_reduce}.html')
+    if os.path.exists(filename):
+        print('The graph has been generated. Skipped!')
+        return None
+    
+    all_embeddings = []
+    with torch.no_grad():
+        for batch in dataset_loader: # make sure that the data is not shuffled by the data loader
+            input_ids = batch["input_ids"].to(device)
+            attention_mask = batch["attention_mask"].to(device)
+    
+            _ = model(input_ids, attention_mask)
+            all_embeddings.append(model.hidden)
+    # Create a DataFrame that includes t-SNE features and the original text labels
+    embeddings = torch.cat(all_embeddings, dim=0)
+    reduced_embeddings = reduce_dimension(embeddings.cpu().numpy(), random_state, dim_reduce)
+    drone_2d_df = pd.DataFrame(reduced_embeddings, columns=['t-SNE1', 't-SNE2'])
+    drone_2d_df['Label'] = dataframe[label_col]
+    if text_col == 'message':
+        drone_2d_df['Label'] = drone_2d_df['Label'].apply(lambda x: "-".join(item for item in x))
+    drone_2d_df['Text'] = dataframe[text_col]
+
+    # Plot with Plotly
+    fig = px.scatter(drone_2d_df, x='t-SNE1', y='t-SNE2', color="Label", hover_data={'Text': True, 'Label': True, 't-SNE1': False, 't-SNE2': False})
+    fig.update_traces(marker=dict(size=5))
+    fig.update_layout(title='t-SNE Visualization with Original Text Labels')
+    fig.write_html(filename)
 
 
 def visualize_message(dataset_loader, idx2label, model, device, output_dir):

@@ -50,8 +50,8 @@ class ProblemClassifier(nn.Module):
         return logits
     
 
-class ProblemClassifierInter(nn.Module):
-    def __init__(self, embedding_model, tokenizer, hidden_dim=128, dropout_rate=0.1, num_class=7, freeze_embedding=False):
+class BaselineModel(nn.Module):
+    def __init__(self, embedding_model, tokenizer, encoder, hidden_dim=128, dropout_rate=0.1, num_class=7, freeze_embedding=False):
         """
         Args:
             embedding_model: A Hugging Face-compatible transformer model with a .forward method

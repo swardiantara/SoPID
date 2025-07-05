@@ -2,13 +2,19 @@
     "feature_col": "message",
     "output_dir": "droptc",
     "embedding": "neo-bert",
+    "encoder": "linear",
+    "dim_reduce": "pca-tsne",
+    "bidirectional": false,
+    "n_heads": 1,
+    "n_layers": 1,
     "n_epochs": 100,
     "batch_size": 8,
     "seed": 70681460,
     "freeze_embedding": true,
+    "save_model": false,
     "device": "cuda",
     "scenario_dir": "droptc/message/neo-bert/freeze/70681460",
-    "best_epoch": 99,
-    "best_val_f1": 0.8146428555497567,
-    "best_val_acc": 0.6410256410256411
+    "best_epoch": 91,
+    "best_val_f1": 0.8102357024011848,
+    "best_val_acc": 0.6324786324786325
 }

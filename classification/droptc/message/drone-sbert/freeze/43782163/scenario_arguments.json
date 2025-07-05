@@ -2,13 +2,19 @@
     "feature_col": "message",
     "output_dir": "droptc",
     "embedding": "drone-sbert",
+    "encoder": "linear",
+    "dim_reduce": "pca-tsne",
+    "bidirectional": false,
+    "n_heads": 1,
+    "n_layers": 1,
     "n_epochs": 100,
     "batch_size": 8,
     "seed": 43782163,
     "freeze_embedding": true,
+    "save_model": false,
     "device": "cuda",
     "scenario_dir": "droptc/message/drone-sbert/freeze/43782163",
-    "best_epoch": 99,
-    "best_val_f1": 0.8719057967442084,
-    "best_val_acc": 0.7435897435897436
+    "best_epoch": 93,
+    "best_val_f1": 0.8766198522648471,
+    "best_val_acc": 0.7521367521367521
 }

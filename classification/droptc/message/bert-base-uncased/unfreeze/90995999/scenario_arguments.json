@@ -2,13 +2,19 @@
     "feature_col": "message",
     "output_dir": "droptc",
     "embedding": "bert-base-uncased",
+    "encoder": "linear",
+    "dim_reduce": "pca-tsne",
+    "bidirectional": false,
+    "n_heads": 1,
+    "n_layers": 1,
     "n_epochs": 100,
     "batch_size": 8,
     "seed": 90995999,
     "freeze_embedding": false,
+    "save_model": false,
     "device": "cuda",
     "scenario_dir": "droptc/message/bert-base-uncased/unfreeze/90995999",
-    "best_epoch": 28,
-    "best_val_f1": 0.9008681547924392,
-    "best_val_acc": 0.7863247863247863
+    "best_epoch": 77,
+    "best_val_f1": 0.9208235706869413,
+    "best_val_acc": 0.8290598290598291
 }

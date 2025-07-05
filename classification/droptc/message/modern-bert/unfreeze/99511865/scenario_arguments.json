@@ -2,13 +2,19 @@
     "feature_col": "message",
     "output_dir": "droptc",
     "embedding": "modern-bert",
+    "encoder": "linear",
+    "dim_reduce": "pca-tsne",
+    "bidirectional": false,
+    "n_heads": 1,
+    "n_layers": 1,
     "n_epochs": 100,
     "batch_size": 8,
     "seed": 99511865,
     "freeze_embedding": false,
+    "save_model": false,
     "device": "cuda",
     "scenario_dir": "droptc/message/modern-bert/unfreeze/99511865",
-    "best_epoch": 83,
-    "best_val_f1": 0.8620527452660417,
-    "best_val_acc": 0.7521367521367521
+    "best_epoch": 71,
+    "best_val_f1": 0.8685703420069718,
+    "best_val_acc": 0.7264957264957265
 }

@@ -103,14 +103,16 @@ def visualize_sentence(dataset_loader, idx2label, model, device, output_dir):
         # Filter data points for each unique label
         x_filtered = [reduced_embeddings[i][0] for i in range(len(reduced_embeddings)) if labels[i] == label]
         y_filtered = [reduced_embeddings[i][1] for i in range(len(reduced_embeddings)) if labels[i] == label]
-        ax.scatter(x_filtered, y_filtered, label=label, s=15)
+        ax.scatter(x_filtered, y_filtered, label=label, s=8, cmap='viridis')
         counter+=1
 
     # Add a legend with only unique labels
     ax.set_xticks([])
     ax.set_yticks([])
-    # legend = ax.legend(loc='lower right')
-    plt.legend([]).set_visible(False)
+    ax.legend()
+    ax.grid(True)
+    # plt.legend([]).set_visible(False)
+    # plt.legend()
     # Display the plot
     plt.savefig(os.path.join(output_dir, "dataset_viz.pdf"), bbox_inches='tight')
     plt.close()

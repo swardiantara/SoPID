@@ -13,7 +13,7 @@ from torch.utils.data import DataLoader
 from transformers import AutoModel, AutoTokenizer
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support, classification_report, confusion_matrix, f1_score
 
-from utils import SentenceDataset
+from utils import SentenceDataset, visualize_sentence
 from model import ProblemClassifier
 
 parser = argparse.ArgumentParser(description="Problem type classification")
@@ -213,7 +213,7 @@ def main():
         for batch in test_loader:
             input_ids = batch["input_ids"].to(device)
             attention_mask = batch["attention_mask"].to(device)
-            labels = batch["labelidx"]
+            labels = batch["label"]
             logits_multiclass_test = model(input_ids, attention_mask)
             logits_multiclass_test = torch.softmax(logits_multiclass_test, dim=1)
             predicted_probs_multiclass_test, predicted_labels_multiclass_test = torch.max(logits_multiclass_test, dim=1)
@@ -283,7 +283,7 @@ def main():
     plt.close()
 
     # Save the model's hidden state to a 2D plot
-    # visualize_projection(merged_loader, idx2pro, best_model.to(device), device, workdir)
+    visualize_sentence(merged_loader, idx2pro, best_model.to(device), device, workdir)
     # Save the model
     if args.save_model:
         torch.save(best_model_state, os.path.join(workdir, 'sentence_pytorch_model.pt'))

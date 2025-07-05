@@ -64,46 +64,93 @@ class MessageDataset(Dataset):
         return {
             'input_ids': encoding['input_ids'].squeeze(),
             'attention_mask': encoding['attention_mask'].squeeze(),
-            'labels': torch.tensor(label, dtype=torch.float32),
+            'label': torch.tensor(label, dtype=torch.float32),
             "labelidx": label,
         }
 
 
-
-def visualize_projection(dataset_loader, idx2label, model, device, output_dir):
-    all_labels_multiclass = []
+def visualize_sentence(dataset_loader, idx2label, model, device, output_dir):
+    all_labels = []
     all_embeddings = []
     with torch.no_grad():
         for batch in dataset_loader:
             input_ids = batch["input_ids"].to(device)
             attention_mask = batch["attention_mask"].to(device)
-            labels_index = batch["labelidx"]
+            labels_index = batch["label"]
     
-            embeddings = model.embedding_model(input_ids, attention_mask)
-            all_labels_multiclass.extend(labels_index.cpu().numpy())
-            all_embeddings.append(embeddings.last_hidden_state)
+            _ = model(input_ids, attention_mask)
+            all_labels.extend(labels_index.cpu().numpy())
+            all_embeddings.append(model.hidden)
     
     tsne = TSNE(n_components=2, random_state=42)
     all_embeddings = torch.cat(all_embeddings, dim=0)
     reduced_embeddings = tsne.fit_transform(all_embeddings.cpu().numpy())
-    label_decoded = [idx2label.get(key) for key in all_labels_multiclass]
-    # label_encoder_multi.inverse_transform(all_labels_multiclass)
+    # label_decoded = [idx2label.get(key) for key in all_labels]
+    # label_encoder_multi.inverse_transform(all_labels)
     label_df = pd.DataFrame()
-    label_df["label"] = list(label_decoded)
+    label_df["label"] = all_labels
+    label_df["label"] = label_df["label"].map(idx2label)
     labels = label_df['label'].tolist()
     
     plt.figure(figsize=(5, 2.5))
     fig, ax = plt.subplots()
 
-    unique_labels = ['Normal', 'Low', 'Medium', 'High']
-    colors = ['#4CAF50', '#FFC107', '#FF5722', '#D32F2F']
+    unique_labels = label_df['label'].unique()
+    # colors = ['#4CAF50', '#FFC107', '#FF5722', '#D32F2F']
     
     counter = 0
     for label in unique_labels:
         # Filter data points for each unique label
         x_filtered = [reduced_embeddings[i][0] for i in range(len(reduced_embeddings)) if labels[i] == label]
         y_filtered = [reduced_embeddings[i][1] for i in range(len(reduced_embeddings)) if labels[i] == label]
-        ax.scatter(x_filtered, y_filtered, label=label, s=15, c=colors[counter])
+        ax.scatter(x_filtered, y_filtered, label=label, s=15)
+        counter+=1
+
+    # Add a legend with only unique labels
+    ax.set_xticks([])
+    ax.set_yticks([])
+    # legend = ax.legend(loc='lower right')
+    plt.legend([]).set_visible(False)
+    # Display the plot
+    plt.savefig(os.path.join(output_dir, "dataset_viz.pdf"), bbox_inches='tight')
+    plt.close()
+
+
+def visualize_message(dataset_loader, idx2label, model, device, output_dir):
+    all_labels = []
+    all_embeddings = []
+    with torch.no_grad():
+        for batch in dataset_loader:
+            input_ids = batch["input_ids"].to(device)
+            attention_mask = batch["attention_mask"].to(device)
+            labels_index = batch["label"]
+    
+            embeddings = model(input_ids, attention_mask)
+            all_labels.extend(labels_index.cpu().numpy())
+            all_embeddings.append(embeddings.last_hidden_state)
+    
+    tsne = TSNE(n_components=2, random_state=42)
+    all_embeddings = torch.cat(all_embeddings, dim=0)
+    reduced_embeddings = tsne.fit_transform(all_embeddings.cpu().numpy())
+    # label_decoded = [idx2label.get(key) for key in all_labels]
+    # label_encoder_multi.inverse_transform(all_labels)
+    label_df = pd.DataFrame()
+    label_df["label"] = all_labels
+    label_df["label"] = label_df["label"].map(idx2label)
+    labels = label_df['label'].tolist()
+    
+    plt.figure(figsize=(5, 2.5))
+    fig, ax = plt.subplots()
+
+    unique_labels = label_df['label'].unique()
+    # colors = ['#4CAF50', '#FFC107', '#FF5722', '#D32F2F']
+    
+    counter = 0
+    for label in unique_labels:
+        # Filter data points for each unique label
+        x_filtered = [reduced_embeddings[i][0] for i in range(len(reduced_embeddings)) if labels[i] == label]
+        y_filtered = [reduced_embeddings[i][1] for i in range(len(reduced_embeddings)) if labels[i] == label]
+        ax.scatter(x_filtered, y_filtered, label=label, s=15)
         counter+=1
 
     # Add a legend with only unique labels

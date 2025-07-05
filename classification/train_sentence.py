@@ -74,10 +74,16 @@ def get_args():
     parser.add_argument("--feature_col", required=True, default="sentence", help="Level of analysis")
     parser.add_argument('--output_dir', type=str, default='droptc',
                         help="Folder to store the experimental results. Default: droptc")
+    parser.add_argument('--embedding', type=str, choices=['bert-base-uncased', 'neo-bert', 'modern-bert', 'all-MiniLM-L6-v2', 'all-MiniLM-L12-v2', 'all-mpnet-base-v2', 'all-distilroberta-v1', 'drone-sbert'], default='bert-base-uncased', help='Type of Word Embdding used. Default: `bert-base-uncased`')
     parser.add_argument('--encoder', type=str, choices=['transformer', 'lstm', 'gru', 'linear'], default='linear',
-                    help="Encoder Architecture used to perform computation. Default: linear.")
-    parser.add_argument('--embedding', type=str, choices=['bert-base-uncased', 'neo-bert', 'modern-bert', 'all-MiniLM-L6-v2', 'all-MiniLM-L12-v2', 'all-mpnet-base-v2', 'all-distilroberta-v1', 'drone-sbert'], default='bert-base-uncased', help='Type of Word Embdding used. Default: bert-base-uncased')
-    parser.add_argument('--dim_reduce', type=str, choices=['tsne', 'pca-tsne', 'umap', 'pca', 'isomap'], default='pca-tsne', help='Dimensional reduction method. Default: `pca-tsne`')
+                    help="Encoder architecture used to perform computation. Default: `linear`.")
+    parser.add_argument('--dim_reduce', type=str, choices=['tsne', 'pca-tsne', 'umap', 'pca', 'isomap'], default='pca-tsne', help='Dimensional reduction method for data visualization. Default: `pca-tsne`')
+    parser.add_argument('--bidirectional', action='store_true',
+                    help="Wether to use Bidirectionality for LSTM and GRU.")
+    parser.add_argument('--n_heads', type=int, default=1,
+                        help='Number of attention heads')
+    parser.add_argument('--n_layers', type=int, default=1,
+                        help='Number of encoder layers')
     parser.add_argument('--n_epochs', type=int, default=15,
                         help='Number of testtraining iterations')
     parser.add_argument('--batch_size', type=int, default=8,
@@ -141,7 +147,7 @@ def main():
     max_seq_length = 64
     batch_size = args.batch_size
     num_epochs = args.n_epochs
-    merged_df = pd.concat([train_df, test_df])
+    merged_df = pd.concat([train_df, test_df], ignore_index=True)
     merged_dataset = SentenceDataset(merged_df, tokenizer, max_seq_length)
     merged_loader = DataLoader(merged_dataset, batch_size=batch_size, shuffle=False)
     train_dataset = SentenceDataset(train_df, tokenizer, max_seq_length)

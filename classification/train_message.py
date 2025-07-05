@@ -17,7 +17,7 @@ from transformers import AutoModel, AutoTokenizer
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support, classification_report, confusion_matrix, f1_score, multilabel_confusion_matrix
 from sklearn.preprocessing import MultiLabelBinarizer
 
-from utils import MessageDataset, visualize_projection
+from utils import MessageDataset, visualize_message, interactive_plot
 from model import ProblemClassifier
 
 parser = argparse.ArgumentParser(description="Problem type classification")
@@ -51,6 +51,15 @@ def get_args():
     parser.add_argument('--output_dir', type=str, default='droptc',
                         help="Folder to store the experimental results. Default: droptc")
     parser.add_argument('--embedding', type=str, choices=['bert-base-uncased', 'neo-bert', 'modern-bert', 'all-MiniLM-L6-v2', 'all-MiniLM-L12-v2', 'all-mpnet-base-v2', 'all-distilroberta-v1', 'drone-sbert'], default='bert-base-uncased', help='Type of Word Embdding used. Default: bert-base-uncased')
+    parser.add_argument('--encoder', type=str, choices=['transformer', 'lstm', 'gru', 'linear'], default='linear',
+                    help="Encoder architecture used to perform computation. Default: `linear`.")
+    parser.add_argument('--dim_reduce', type=str, choices=['tsne', 'pca-tsne', 'umap', 'pca', 'isomap'], default='pca-tsne', help='Dimensional reduction method for data visualization. Default: `pca-tsne`')
+    parser.add_argument('--bidirectional', action='store_true',
+                    help="Wether to use Bidirectionality for LSTM and GRU.")
+    parser.add_argument('--n_heads', type=int, default=1,
+                        help='Number of attention heads')
+    parser.add_argument('--n_layers', type=int, default=1,
+                        help='Number of encoder layers')
     parser.add_argument('--n_epochs', type=int, default=15,
                         help='Number of testtraining iterations')
     parser.add_argument('--batch_size', type=int, default=8,
@@ -106,14 +115,14 @@ def main():
     os.makedirs(workdir, exist_ok=True)
 
     train_df = pd.read_excel(os.path.join('dataset', f'train_{args.feature_col}.xlsx'))
-    train_df["labels"] = train_df['labels'].apply(literal_eval)
-    train_df['labels'] = train_df['labels'].apply(lambda x: [raw2pro.get(item, item) for item in x])
-    train_df['labelidx'] = train_df['labels'].map(label_mapper)
+    train_df["label"] = train_df['label'].apply(literal_eval)
+    train_df['label_name'] = train_df['label'].apply(lambda x: [raw2pro.get(item, item) for item in x])
+    train_df['labelidx'] = train_df['label'].map(label_mapper)
 
     test_df = pd.read_excel(os.path.join('dataset', f'test_{args.feature_col}.xlsx'))
-    test_df["labels"] = test_df['labels'].apply(literal_eval)
-    test_df['labels'] = test_df['labels'].apply(lambda x: [raw2pro.get(item, item) for item in x])
-    test_df['labelidx'] = test_df['labels'].map(label_mapper)
+    test_df["label"] = test_df['label'].apply(literal_eval)
+    test_df['label_name'] = test_df['label'].apply(lambda x: [raw2pro.get(item, item) for item in x])
+    test_df['labelidx'] = test_df['label'].map(label_mapper)
     
     if args.embedding == 'drone-sbert':
         model_name_path = f"swardiantara/{args.feature_col}-problem_type-embedding"
@@ -131,6 +140,9 @@ def main():
     batch_size = args.batch_size
     num_epochs = args.n_epochs
 
+    merged_df = pd.concat([train_df, test_df], ignore_index=True)
+    merged_dataset = MessageDataset(merged_df, tokenizer, max_seq_length)
+    merged_loader = DataLoader(merged_dataset, batch_size=batch_size, shuffle=False)
     train_dataset = MessageDataset(train_df, tokenizer, max_seq_length)
     test_dataset = MessageDataset(test_df, tokenizer, max_seq_length)
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
@@ -150,7 +162,7 @@ def main():
             optimizer.zero_grad()
             input_ids = batch["input_ids"].to(device)
             attention_mask = batch["attention_mask"].to(device)
-            labels = batch["labels"].to(device)
+            labels = batch["label"].to(device)
 
             outputs = model(input_ids, attention_mask)
             loss = criterion(outputs, labels)
@@ -171,7 +183,7 @@ def main():
             for batch in test_loader:
                 input_ids = batch["input_ids"].to(device)
                 attention_mask = batch["attention_mask"].to(device)
-                labels = batch["labels"].to(device)
+                labels = batch["label"].to(device)
 
                 outputs = model(input_ids, attention_mask)
                 loss = criterion(outputs, labels)
@@ -205,7 +217,7 @@ def main():
         for batch in tqdm(test_loader, desc="Evaluation..."):
             input_ids = batch["input_ids"].to(device)
             attention_mask = batch["attention_mask"].to(device)
-            labels = batch["labels"].cpu().numpy()
+            labels = batch["label"].cpu().numpy()
 
             outputs = model(input_ids, attention_mask)
             preds = [[1 if logit >= 0.5 else 0 for logit in logits] for logits in torch.sigmoid(outputs)]
@@ -221,7 +233,7 @@ def main():
     tests_decoded = all_labels_multiclass
     prediction_df = pd.DataFrame()
     prediction_df["message"] = test_df["message"]
-    prediction_df['label_name'] = test_df['labels']
+    prediction_df['label_name'] = test_df['label_name']
     prediction_df["labelidx"] = test_df['labelidx']
     prediction_df["predidx"] = list(preds_decoded)
     prediction_df['pred_name'] = prediction_df['predidx'].map(class_mapper)
@@ -276,6 +288,7 @@ def main():
 
     # Save the model's hidden state to a 2D plot
     # visualize_projection(merged_loader, idx2pro, best_model.to(device), device, workdir)
+    interactive_plot(merged_df, merged_loader, args.feature_col, 'label_name', model, device, args.dim_reduce, args.seed, workdir)
     # Save the model
     if args.save_model:
         torch.save(best_model_state, os.path.join(workdir, 'message_pytorch_model.pt'))
